@@ -62,7 +62,7 @@ func run(ctx context.Context) error {
 	client := pace.New(os.Getenv("PACE_API_KEY"))
 	cardsService := pace.NewCardsService(client)
 	resp, err := cardsService.GetCard(pace.CreateCardRequest{
-		OrgID: "your-org-id",
+		OrgID:  "your-org-id",
 		CardID: "12",
 	})
 	if err != nil {
