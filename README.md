@@ -55,8 +55,10 @@ go get github.com/pacedotdev/pace
 Then import it into your code:
 
 * Use `pace.New(apikey)` to create a `pace.Client` with your API key ([Read more about API keys in Pace](https://pace.dev/blog/2020/07/01/docs-api-keys.html))
-* Call the function to create the service you need to use (e.g. `pace.NewCardsService`) passing in the `pace.Client`
+* Call the function to create the service you need (e.g. `pace.NewCardsService`) passing in the `pace.Client`
 * Call the methods on that service to access the Pace API
+
+Here is a complete example:
 
 ```go
 package main
