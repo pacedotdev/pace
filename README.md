@@ -1,4 +1,6 @@
-Welcome to Pace for Developers. This repository contains:
+# Welcome to Pace for Developers. 
+
+This repository contains:
 
 * [Pace CLI](#pace-cli)
 * [Go client library](#go-client-library)
