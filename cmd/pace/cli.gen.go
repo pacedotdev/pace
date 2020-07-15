@@ -14,11 +14,20 @@ import (
 )
 
 func runCommand(ctx context.Context, args []string) error {
-	if len(args) < 2 || args[1] == "help" {
+	if len(args) < 2 {
 		showHelp(args)
 		return nil
 	}
 	switch args[1] {
+	case "help":
+		showHelp(args)
+		return nil
+	case "list":
+		printList()
+		return nil
+	case "templates":
+		printTemplates()
+		return nil
 
 	case "CardsService.CreateCard":
 		return CardsServiceCreateCard(ctx, args)
@@ -39,23 +48,25 @@ func runCommand(ctx context.Context, args []string) error {
 func showHelp(args []string) {
 	if len(args) < 3 {
 		printUsage()
-		fmt.Println("services:")
 
-		fmt.Print("- CardsService")
+		fmt.Print("* CardsService")
 		commentForCardsService := `CardsService is used to work with cards.`
 		if commentForCardsService != "" {
-			fmt.Print(": ", commentForCardsService)
+			fmt.Print(" - ", commentForCardsService)
 		}
 		fmt.Println()
 
-		fmt.Print("- CommentsService")
+		fmt.Print("* CommentsService")
 		commentForCommentsService := ``
 		if commentForCommentsService != "" {
-			fmt.Print(": ", commentForCommentsService)
+			fmt.Print(" - ", commentForCommentsService)
 		}
 		fmt.Println()
 
-		fmt.Println("for more info: pace help <service>")
+		fmt.Println()
+		fmt.Println("  pace help <service>[.<method>] - print specific help")
+		fmt.Println("  pace list - list all services and methods")
+		fmt.Println("  pace templates - show copy and paste examples")
 		return
 	}
 	showHelpFor(args, args[2])
@@ -67,38 +78,56 @@ func showHelpFor(args []string, service string) {
 	case "CardsService":
 		fmt.Printf("methods for %s:\n", service)
 
-		fmt.Print("- CardsService.CreateCard")
+		fmt.Print("* CardsService.CreateCard")
 		commentForCardsServiceCreateCard := `CreateCard creates a new Card.`
 		if commentForCardsServiceCreateCard != "" {
-			fmt.Print(": ", commentForCardsServiceCreateCard)
+			fmt.Print(" - ", commentForCardsServiceCreateCard)
 		}
 		fmt.Println()
 
-		fmt.Print("- CardsService.GetCard")
+		fmt.Print("* CardsService.GetCard")
 		commentForCardsServiceGetCard := `GetCard gets a card.`
 		if commentForCardsServiceGetCard != "" {
-			fmt.Print(": ", commentForCardsServiceGetCard)
+			fmt.Print(" - ", commentForCardsServiceGetCard)
 		}
 		fmt.Println()
 
 	case "CardsService.CreateCard":
-		fmt.Println(`usage for CardsService.CreateCard
+		fmt.Println(`Usage for CardsService.CreateCard
 
   pace CardsService.CreateCard [flags]
 
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		var (
+			apikey string
+			host   string
+			debug  bool
+		)
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key")
+		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.CreateCardRequest
 		addFlagsForCreateCardRequest(flags, "", &request)
 		flags.PrintDefaults()
 
 	case "CardsService.GetCard":
-		fmt.Println(`usage for CardsService.GetCard
+		fmt.Println(`Usage for CardsService.GetCard
 
   pace CardsService.GetCard [flags]
 
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		var (
+			apikey string
+			host   string
+			debug  bool
+		)
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key")
+		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.GetCardRequest
 		addFlagsForGetCardRequest(flags, "", &request)
 		flags.PrintDefaults()
@@ -106,20 +135,29 @@ flags:`)
 	case "CommentsService":
 		fmt.Printf("methods for %s:\n", service)
 
-		fmt.Print("- CommentsService.AddComment")
+		fmt.Print("* CommentsService.AddComment")
 		commentForCommentsServiceAddComment := `AddComment adds a comment.`
 		if commentForCommentsServiceAddComment != "" {
-			fmt.Print(": ", commentForCommentsServiceAddComment)
+			fmt.Print(" - ", commentForCommentsServiceAddComment)
 		}
 		fmt.Println()
 
 	case "CommentsService.AddComment":
-		fmt.Println(`usage for CommentsService.AddComment
+		fmt.Println(`Usage for CommentsService.AddComment
 
   pace CommentsService.AddComment [flags]
 
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		var (
+			apikey string
+			host   string
+			debug  bool
+		)
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key")
+		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.AddCommentRequest
 		addFlagsForAddCommentRequest(flags, "", &request)
 		flags.PrintDefaults()
@@ -131,7 +169,9 @@ flags:`)
 }
 
 func printUsage() {
-	fmt.Println(`usage: pace <service>.<method> [args...]`)
+	fmt.Println(`Usage:
+  pace <service>.<method> [args...]`)
+	fmt.Println()
 }
 
 func CardsServiceCreateCard(ctx context.Context, args []string) error {
@@ -153,7 +193,7 @@ func CardsServiceCreateCard(ctx context.Context, args []string) error {
 		apikey = os.Getenv("PACE_API_KEY")
 	}
 	if apikey == "" {
-		return errors.New("missing apikey")
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
 	client := pace.New(apikey)
 	client.RemoteHost = host
@@ -193,7 +233,7 @@ func CardsServiceGetCard(ctx context.Context, args []string) error {
 		apikey = os.Getenv("PACE_API_KEY")
 	}
 	if apikey == "" {
-		return errors.New("missing apikey")
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
 	client := pace.New(apikey)
 	client.RemoteHost = host
@@ -233,7 +273,7 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 		apikey = os.Getenv("PACE_API_KEY")
 	}
 	if apikey == "" {
-		return errors.New("missing apikey")
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
 	client := pace.New(apikey)
 	client.RemoteHost = host
@@ -252,6 +292,47 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 		return errors.New(resp.Error)
 	}
 	return nil
+}
+
+func printList() {
+
+	fmt.Printf("CardsService.CreateCard")
+	commentCardsServiceCreateCard := `CreateCard creates a new Card.`
+	if len(commentCardsServiceCreateCard) > 0 {
+		fmt.Printf(" - %s", commentCardsServiceCreateCard)
+	}
+	fmt.Println()
+
+	fmt.Printf("CardsService.GetCard")
+	commentCardsServiceGetCard := `GetCard gets a card.`
+	if len(commentCardsServiceGetCard) > 0 {
+		fmt.Printf(" - %s", commentCardsServiceGetCard)
+	}
+	fmt.Println()
+
+	fmt.Printf("CommentsService.AddComment")
+	commentCommentsServiceAddComment := `AddComment adds a comment.`
+	if len(commentCommentsServiceAddComment) > 0 {
+		fmt.Printf(" - %s", commentCommentsServiceAddComment)
+	}
+	fmt.Println()
+
+}
+
+func printTemplates() {
+
+	fmt.Printf("pace CardsService.CreateCard ")
+	printArgslistCreateCardRequest()
+	fmt.Println()
+
+	fmt.Printf("pace CardsService.GetCard ")
+	printArgslistGetCardRequest()
+	fmt.Println()
+
+	fmt.Printf("pace CommentsService.AddComment ")
+	printArgslistAddCommentRequest()
+	fmt.Println()
+
 }
 
 func addFlagsForAddCommentRequest(flags *flag.FlagSet, prefix string, v *pace.AddCommentRequest) {
@@ -275,6 +356,18 @@ func printAddCommentRequest(v *pace.AddCommentRequest) {
 	fmt.Println(string(b))
 }
 
+func printArgslistAddCommentRequest() {
+
+	fmt.Print("-OrgID= ")
+
+	fmt.Print("-TargetKind= ")
+
+	fmt.Print("-TargetID= ")
+
+	fmt.Print("-Body= ")
+
+}
+
 func addFlagsForPerson(flags *flag.FlagSet, prefix string, v *pace.Person) {
 
 	flags.StringVar(&v.ID, prefix+"ID", "", ``)
@@ -294,6 +387,18 @@ func printPerson(v *pace.Person) {
 		return
 	}
 	fmt.Println(string(b))
+}
+
+func printArgslistPerson() {
+
+	fmt.Print("-ID= ")
+
+	fmt.Print("-Username= ")
+
+	fmt.Print("-Name= ")
+
+	fmt.Print("-PhotoURL= ")
+
 }
 
 func addFlagsForFile(flags *flag.FlagSet, prefix string, v *pace.File) {
@@ -328,6 +433,30 @@ func printFile(v *pace.File) {
 	fmt.Println(string(b))
 }
 
+func printArgslistFile() {
+
+	fmt.Print("-ID= ")
+
+	fmt.Print("-CTime= ")
+
+	fmt.Print("-Name= ")
+
+	fmt.Print("-Path= ")
+
+	fmt.Print("-ContentType= ")
+
+	fmt.Print("-FileType= ")
+
+	fmt.Print("-Size= ")
+
+	fmt.Print("-DownloadURL= ")
+
+	fmt.Print("-ThumbnailURL= ")
+
+	fmt.Print("-Author= ")
+
+}
+
 func addFlagsForComment(flags *flag.FlagSet, prefix string, v *pace.Comment) {
 
 	flags.StringVar(&v.ID, prefix+"ID", "", ``)
@@ -355,6 +484,24 @@ func printComment(v *pace.Comment) {
 	fmt.Println(string(b))
 }
 
+func printArgslistComment() {
+
+	fmt.Print("-ID= ")
+
+	fmt.Print("-CTime= ")
+
+	fmt.Print("-MTime= ")
+
+	fmt.Print("-Body= ")
+
+	fmt.Print("-BodyHTML= ")
+
+	fmt.Print("-Author= ")
+
+	fmt.Print("-Files= ")
+
+}
+
 func addFlagsForAddCommentResponse(flags *flag.FlagSet, prefix string, v *pace.AddCommentResponse) {
 
 	addFlagsForComment(flags, "Comment.", &v.Comment)
@@ -372,6 +519,14 @@ func printAddCommentResponse(v *pace.AddCommentResponse) {
 	fmt.Println(string(b))
 }
 
+func printArgslistAddCommentResponse() {
+
+	fmt.Print("-Comment= ")
+
+	fmt.Print("-Error= ")
+
+}
+
 func addFlagsForRelatedCardsSummary(flags *flag.FlagSet, prefix string, v *pace.RelatedCardsSummary) {
 
 }
@@ -383,6 +538,16 @@ func printRelatedCardsSummary(v *pace.RelatedCardsSummary) {
 		return
 	}
 	fmt.Println(string(b))
+}
+
+func printArgslistRelatedCardsSummary() {
+
+	fmt.Print("-Total= ")
+
+	fmt.Print("-Done= ")
+
+	fmt.Print("-Progress= ")
+
 }
 
 func addFlagsForCard(flags *flag.FlagSet, prefix string, v *pace.Card) {
@@ -426,6 +591,42 @@ func printCard(v *pace.Card) {
 	fmt.Println(string(b))
 }
 
+func printArgslistCard() {
+
+	fmt.Print("-ID= ")
+
+	fmt.Print("-CTime= ")
+
+	fmt.Print("-MTime= ")
+
+	fmt.Print("-Order= ")
+
+	fmt.Print("-TeamID= ")
+
+	fmt.Print("-Slug= ")
+
+	fmt.Print("-Title= ")
+
+	fmt.Print("-Status= ")
+
+	fmt.Print("-Author= ")
+
+	fmt.Print("-Body= ")
+
+	fmt.Print("-BodyHTML= ")
+
+	fmt.Print("-Tags= ")
+
+	fmt.Print("-TakenByCurrentUser= ")
+
+	fmt.Print("-TakenByPeople= ")
+
+	fmt.Print("-Files= ")
+
+	fmt.Print("-RelatedCardsSummary= ")
+
+}
+
 func addFlagsForCreateCardRequest(flags *flag.FlagSet, prefix string, v *pace.CreateCardRequest) {
 
 	flags.StringVar(&v.OrgID, prefix+"OrgID", "", `OrgID is the org ID in which to create the card.`)
@@ -449,6 +650,20 @@ func printCreateCardRequest(v *pace.CreateCardRequest) {
 	fmt.Println(string(b))
 }
 
+func printArgslistCreateCardRequest() {
+
+	fmt.Print("-OrgID= ")
+
+	fmt.Print("-TeamID= ")
+
+	fmt.Print("-Title= ")
+
+	fmt.Print("-ParentTargetKind= ")
+
+	fmt.Print("-ParentTargetID= ")
+
+}
+
 func addFlagsForCreateCardResponse(flags *flag.FlagSet, prefix string, v *pace.CreateCardResponse) {
 
 	addFlagsForCard(flags, "Card.", &v.Card)
@@ -464,6 +679,14 @@ func printCreateCardResponse(v *pace.CreateCardResponse) {
 		return
 	}
 	fmt.Println(string(b))
+}
+
+func printArgslistCreateCardResponse() {
+
+	fmt.Print("-Card= ")
+
+	fmt.Print("-Error= ")
+
 }
 
 func addFlagsForGetCardRequest(flags *flag.FlagSet, prefix string, v *pace.GetCardRequest) {
@@ -483,6 +706,14 @@ func printGetCardRequest(v *pace.GetCardRequest) {
 	fmt.Println(string(b))
 }
 
+func printArgslistGetCardRequest() {
+
+	fmt.Print("-OrgID= ")
+
+	fmt.Print("-CardID= ")
+
+}
+
 func addFlagsForGetCardResponse(flags *flag.FlagSet, prefix string, v *pace.GetCardResponse) {
 
 	addFlagsForCard(flags, "Card.", &v.Card)
@@ -498,4 +729,12 @@ func printGetCardResponse(v *pace.GetCardResponse) {
 		return
 	}
 	fmt.Println(string(b))
+}
+
+func printArgslistGetCardResponse() {
+
+	fmt.Print("-Card= ")
+
+	fmt.Print("-Error= ")
+
 }

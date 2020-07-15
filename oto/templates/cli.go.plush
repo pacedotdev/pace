@@ -17,11 +17,20 @@ import (
 )
 
 func runCommand(ctx context.Context, args []string) error {
-	if len(args) < 2 || args[1] == "help" {
+	if len(args) < 2 {
 		showHelp(args)
 		return nil
 	}
 	switch args[1] {
+		case "help":
+			showHelp(args)
+			return nil
+		case "list":
+			printList()
+			return nil
+		case "templates":
+			printTemplates()
+			return nil
 		<%= for (service) in def.Services { %>
 			<%= for (method) in service.Methods { %>
 				case "<%= service.Name %>.<%= method.Name %>":
@@ -38,16 +47,18 @@ func runCommand(ctx context.Context, args []string) error {
 func showHelp(args []string) {
 	if len(args) < 3 {
 		printUsage()
-		fmt.Println("services:")
 		<%= for (service) in def.Services { %>
-			fmt.Print("- <%= service.Name %>")
+			fmt.Print("* <%= service.Name %>")
 			commentFor<%= service.Name %> := `<%= service.Comment %>`
 			if commentFor<%= service.Name %> != "" {
-				fmt.Print(": ", commentFor<%= service.Name %>)
+				fmt.Print(" - ", commentFor<%= service.Name %>)
 			}
 			fmt.Println()
 		<% } %>
-		fmt.Println("for more info: pace help <service>")
+		fmt.Println()
+		fmt.Println("  pace help <service>[.<method>] - print specific help")
+		fmt.Println("  pace list - list all services and methods")
+		fmt.Println("  pace templates - show copy and paste examples")
 		return
 	}
 	showHelpFor(args, args[2])
@@ -59,21 +70,30 @@ func showHelpFor(args []string, service string) {
 	case "<%= service.Name %>":
 		fmt.Printf("methods for %s:\n", service)
 		<%= for (method) in service.Methods { %>
-			fmt.Print("- <%= service.Name %>.<%= method.Name %>")
+			fmt.Print("* <%= service.Name %>.<%= method.Name %>")
 			commentFor<%= service.Name %><%= method.Name %> := `<%= method.Comment %>`
 			if commentFor<%= service.Name %><%= method.Name %> != "" {
-				fmt.Print(": ", commentFor<%= service.Name %><%= method.Name %>)
+				fmt.Print(" - ", commentFor<%= service.Name %><%= method.Name %>)
 			}
 			fmt.Println()
 		<% } %>
 	<%= for (method) in service.Methods { %>
 	case "<%= service.Name %>.<%= method.Name %>":
-		fmt.Println(`usage for <%= service.Name %>.<%= method.Name %>
+		fmt.Println(`Usage for <%= service.Name %>.<%= method.Name %>
 
   pace <%= service.Name %>.<%= method.Name %> [flags]
 
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		var (
+			apikey string
+			host string
+			debug bool
+		)
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key")
+		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.<%= method.InputObject.TypeName %>
 		addFlagsFor<%= method.InputObject.TypeName %>(flags, "", &request)
 		flags.PrintDefaults()
@@ -86,7 +106,9 @@ flags:`)
 }
 
 func printUsage() {
-	fmt.Println(`usage: pace <service>.<method> [args...]`)
+	fmt.Println(`Usage:
+  pace <service>.<method> [args...]`)
+	fmt.Println()
 }
 
 <%= for (service) in def.Services { %>
@@ -110,7 +132,7 @@ func printUsage() {
 				apikey = os.Getenv("PACE_API_KEY")
 			}
 			if apikey == "" {
-				return errors.New("missing apikey")
+				return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 			}
 			client := pace.New(apikey)
 			client.RemoteHost = host
@@ -133,6 +155,29 @@ func printUsage() {
 	<% } %>
 <% } %>
 
+func printList() {
+	<%= for (service) in def.Services { %>
+		<%= for (method) in service.Methods { %>
+			fmt.Printf("<%= service.Name %>.<%= method.Name %>")
+			comment<%= service.Name %><%= method.Name %> := `<%= method.Comment %>`
+			if len(comment<%= service.Name %><%= method.Name %>) > 0 {
+				fmt.Printf(" - %s", comment<%= service.Name %><%= method.Name %>)
+			}
+			fmt.Println()
+		<% } %>
+	<% } %>
+}
+
+func printTemplates() {
+	<%= for (service) in def.Services { %>
+		<%= for (method) in service.Methods { %>
+			fmt.Printf("pace <%= service.Name %>.<%= method.Name %> ")
+			printArgslist<%= method.InputObject.TypeName %>()
+			fmt.Println()
+		<% } %>
+	<% } %>
+}
+
 <%= for (object) in def.Objects { %>
 	func addFlagsFor<%= object.Name %>(flags *flag.FlagSet, prefix string, v *pace.<%= object.Name %>) {
 		<%= for (field) in object.Fields { %>
@@ -153,5 +198,11 @@ func printUsage() {
 			return
 		}
 		fmt.Println(string(b))
+	}
+
+	func printArgslist<%= object.Name %>() {
+		<%= for (field) in object.Fields { %>
+			fmt.Print("-<%= field.Name %>= ")
+		<% } %>
 	}
 <% } %>

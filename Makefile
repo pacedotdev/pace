@@ -1,4 +1,9 @@
 
+.PHONY: install genoto
+
+install:
+	cd cmd/pace && go install
+
 genoto:
 	oto \
 		-template ./oto/templates/client.go.plush -out ./pace.gen.go \
