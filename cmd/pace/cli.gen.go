@@ -67,6 +67,7 @@ func showHelp(args []string) {
 		fmt.Println("  pace help <service>[.<method>] - print specific help")
 		fmt.Println("  pace list - list all services and methods")
 		fmt.Println("  pace templates - show copy and paste examples")
+		printFlagDefaults(args)
 		return
 	}
 	showHelpFor(args, args[2])
@@ -292,6 +293,21 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 		return errors.New(resp.Error)
 	}
 	return nil
+}
+
+func printFlagDefaults(args []string) {
+	fmt.Println()
+	fmt.Println("Flags:")
+	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	var (
+		apikey string
+		host   string
+		debug  bool
+	)
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key")
+	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+	flags.BoolVar(&debug, "debug", false, "prints debug information")
+	flags.PrintDefaults()
 }
 
 func printList() {
