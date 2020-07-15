@@ -209,9 +209,6 @@ func CardsServiceCreateCard(ctx context.Context, args []string) error {
 		return err
 	}
 	printCreateCardResponse(resp)
-	if resp.Error != "" {
-		return errors.New(resp.Error)
-	}
 	return nil
 }
 
@@ -249,9 +246,6 @@ func CardsServiceGetCard(ctx context.Context, args []string) error {
 		return err
 	}
 	printGetCardResponse(resp)
-	if resp.Error != "" {
-		return errors.New(resp.Error)
-	}
 	return nil
 }
 
@@ -289,9 +283,6 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 		return err
 	}
 	printAddCommentResponse(resp)
-	if resp.Error != "" {
-		return errors.New(resp.Error)
-	}
 	return nil
 }
 
@@ -522,7 +513,7 @@ func addFlagsForAddCommentResponse(flags *flag.FlagSet, prefix string, v *pace.A
 
 	addFlagsForComment(flags, "Comment.", &v.Comment)
 
-	flags.StringVar(&v.Error, prefix+"Error", "", `Error is string explaining what went wrong. Empty if everything was fine.`)
+	// skipping Error field (handled by Go client)
 
 }
 
@@ -684,7 +675,7 @@ func addFlagsForCreateCardResponse(flags *flag.FlagSet, prefix string, v *pace.C
 
 	addFlagsForCard(flags, "Card.", &v.Card)
 
-	flags.StringVar(&v.Error, prefix+"Error", "", `Error is string explaining what went wrong. Empty if everything was fine.`)
+	// skipping Error field (handled by Go client)
 
 }
 
@@ -734,7 +725,7 @@ func addFlagsForGetCardResponse(flags *flag.FlagSet, prefix string, v *pace.GetC
 
 	addFlagsForCard(flags, "Card.", &v.Card)
 
-	flags.StringVar(&v.Error, prefix+"Error", "", `Error is string explaining what went wrong. Empty if everything was fine.`)
+	// skipping Error field (handled by Go client)
 
 }
 

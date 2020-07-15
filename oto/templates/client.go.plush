@@ -77,7 +77,10 @@ func New<%= service.Name %>(client *Client) *<%= service.Name %> {
 		return nil, errors.Wrap(err, "<%= service.Name %>.<%= method.Name %>")
 	}
 	defer resp.Body.Close()
-	var response <%= method.OutputObject.TypeName %>
+	var response struct {
+		<%= method.OutputObject.TypeName %>
+		Error string
+	}
 	var bodyReader io.Reader = resp.Body
 	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
 		decodedBody, err := gzip.NewReader(resp.Body)
@@ -97,7 +100,10 @@ func New<%= service.Name %>(client *Client) *<%= service.Name %> {
 		}
 		return nil, err
 	}
-	return &response, nil
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.<%= method.OutputObject.TypeName %>, nil
 }
 <% } %>
 <% } %>
@@ -106,7 +112,9 @@ func New<%= service.Name %>(client *Client) *<%= service.Name %> {
 	<%= if (!object.Imported) { %>
 		<%= format_comment_text(object.Comment) %>type <%= object.Name %> struct {
 			<%= for (field) in object.Fields { %>
-				<%= format_comment_text(field.Comment) %><%= field.Name %> <%= if (field.Type.Multiple == true) { %>[]<% } %><%= field.Type.TypeName %> `json:"<%= field.Name %><%= if (field.OmitEmpty) { %>,omitempty<% } %>"`
+				<%= if (field.Name != "Error") { %>
+ 					<%= format_comment_text(field.Comment) %><%= field.Name %> <%= if (field.Type.Multiple == true) { %>[]<% } %><%= field.Type.TypeName %> `json:"<%= field.Name %><%= if (field.OmitEmpty) { %>,omitempty<% } %>"`
+				<% } %>
 			<% } %>
 		}
 	<% } %>

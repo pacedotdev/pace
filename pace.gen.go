@@ -75,7 +75,10 @@ func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*Cr
 		return nil, errors.Wrap(err, "CardsService.CreateCard")
 	}
 	defer resp.Body.Close()
-	var response CreateCardResponse
+	var response struct {
+		CreateCardResponse
+		Error string
+	}
 	var bodyReader io.Reader = resp.Body
 	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
 		decodedBody, err := gzip.NewReader(resp.Body)
@@ -95,7 +98,10 @@ func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*Cr
 		}
 		return nil, err
 	}
-	return &response, nil
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.CreateCardResponse, nil
 }
 
 // GetCard gets a card.
@@ -120,7 +126,10 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 		return nil, errors.Wrap(err, "CardsService.GetCard")
 	}
 	defer resp.Body.Close()
-	var response GetCardResponse
+	var response struct {
+		GetCardResponse
+		Error string
+	}
 	var bodyReader io.Reader = resp.Body
 	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
 		decodedBody, err := gzip.NewReader(resp.Body)
@@ -140,7 +149,10 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 		}
 		return nil, err
 	}
-	return &response, nil
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.GetCardResponse, nil
 }
 
 type CommentsService struct {
@@ -176,7 +188,10 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 		return nil, errors.Wrap(err, "CommentsService.AddComment")
 	}
 	defer resp.Body.Close()
-	var response AddCommentResponse
+	var response struct {
+		AddCommentResponse
+		Error string
+	}
 	var bodyReader io.Reader = resp.Body
 	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
 		decodedBody, err := gzip.NewReader(resp.Body)
@@ -196,7 +211,10 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 		}
 		return nil, err
 	}
-	return &response, nil
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.AddCommentResponse, nil
 }
 
 type AddCommentRequest struct {
@@ -273,9 +291,6 @@ type Comment struct {
 
 type AddCommentResponse struct {
 	Comment Comment `json:"Comment"`
-
-	// Error is string explaining what went wrong. Empty if everything was fine.
-	Error string `json:"Error,omitempty"`
 }
 
 type RelatedCardsSummary struct {
@@ -349,9 +364,6 @@ type CreateCardResponse struct {
 
 	// Card is the card that was just created.
 	Card Card `json:"Card"`
-
-	// Error is string explaining what went wrong. Empty if everything was fine.
-	Error string `json:"Error,omitempty"`
 }
 
 type GetCardRequest struct {
@@ -362,7 +374,4 @@ type GetCardRequest struct {
 
 type GetCardResponse struct {
 	Card Card `json:"Card"`
-
-	// Error is string explaining what went wrong. Empty if everything was fine.
-	Error string `json:"Error,omitempty"`
 }

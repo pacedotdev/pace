@@ -148,9 +148,6 @@ func printUsage() {
 				return err
 			}
 			print<%= method.OutputObject.TypeName %>(resp)
-			if resp.Error != "" {
-				return errors.New(resp.Error)
-			}
 			return nil
 		}
 	<% } %>
@@ -197,7 +194,9 @@ func printTemplates() {
 <%= for (object) in def.Objects { %>
 	func addFlagsFor<%= object.Name %>(flags *flag.FlagSet, prefix string, v *pace.<%= object.Name %>) {
 		<%= for (field) in object.Fields { %>
-			<%= if (field.Type.Multiple) { %>
+			<%= if (field.Name == "Error") { %>
+				// skipping Error field (handled by Go client)
+			<% } else if (field.Type.Multiple) { %>
 				// []<%= field.Type.TypeName %> not supported yet
 			<% } else if (field.Type.IsObject) { %>
 			addFlagsFor<%= field.Type.TypeName %>(flags, "<%= field.Name %>.", &v.<%= field.Name %>)
