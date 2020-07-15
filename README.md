@@ -1,4 +1,7 @@
 
+* [Pace CLI](#pace-cli)
+* [Go client library](#go-client-library)
+
 ![](pace.dev-banner.jpg)
 
 # Pace CLI
