@@ -61,7 +61,7 @@ func (s *<%= service.Name %>) <%= method.Name %>(ctx context.Context, r <%= meth
 	if err != nil {
 		return nil, errors.Wrap(err, "<%= service.Name %>.<%= method.Name %>: marshal <%= method.InputObject.TypeName %>")
 	}
-	url := s.client.RemoteHost + "/oto/<%= service.Name %>.<%= method.Name %>"
+	url := s.client.RemoteHost + "/api/<%= service.Name %>.<%= method.Name %>"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))

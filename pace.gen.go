@@ -57,7 +57,7 @@ func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*Cr
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.CreateCard: marshal CreateCardRequest")
 	}
-	url := s.client.RemoteHost + "/oto/CardsService.CreateCard"
+	url := s.client.RemoteHost + "/api/CardsService.CreateCard"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
@@ -101,7 +101,7 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.GetCard: marshal GetCardRequest")
 	}
-	url := s.client.RemoteHost + "/oto/CardsService.GetCard"
+	url := s.client.RemoteHost + "/api/CardsService.GetCard"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
@@ -156,7 +156,7 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 	if err != nil {
 		return nil, errors.Wrap(err, "CommentsService.AddComment: marshal AddCommentRequest")
 	}
-	url := s.client.RemoteHost + "/oto/CommentsService.AddComment"
+	url := s.client.RemoteHost + "/api/CommentsService.AddComment"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
