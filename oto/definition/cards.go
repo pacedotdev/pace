@@ -18,19 +18,25 @@ type GetCardResponse struct {
 }
 
 type CreateCardRequest struct {
-	OrgID  string
+	// OrgID is the org ID in which to create the card.
+	OrgID string
+	// TeamID is the team ID in which to create the card.
 	TeamID string
-	Title  string
-
+	// Title is the title of the card.
+	Title string
+	// ParentTargetKind is the kind of target to relate this card to (e.g. card or message)
 	ParentTargetKind string
-	ParentTargetID   string
+	// ParentTargetID is the ID of the item to relate this new card to.
+	ParentTargetID string
 }
 
 type CreateCardResponse struct {
+	// Card is the card that was just created.
 	Card Card
 }
 
 type Card struct {
+	// ID is the unique ID of the card within the org.
 	ID       string
 	CTime    string
 	MTime    string

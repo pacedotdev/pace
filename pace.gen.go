@@ -41,6 +41,7 @@ func New(apiKey string) *Client {
 	return c
 }
 
+// CardsService is used to work with cards.
 type CardsService struct {
 	client *Client
 }
@@ -52,6 +53,7 @@ func NewCardsService(client *Client) *CardsService {
 	}
 }
 
+// CreateCard creates a new Card.
 func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*CreateCardResponse, error) {
 	requestBodyBytes, err := json.Marshal(r)
 	if err != nil {
@@ -89,13 +91,14 @@ func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*Cr
 	}
 	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
 		if resp.StatusCode != http.StatusOK {
-			return nil, errors.Errorf("CardsService.CreateCard: %v %s: %v", resp.StatusCode, http.StatusText(resp.StatusCode), string(respBodyBytes))
+			return nil, errors.Errorf("CardsService.CreateCard: (%d) %v", resp.StatusCode, string(respBodyBytes))
 		}
 		return nil, err
 	}
 	return &response, nil
 }
 
+// GetCard gets a card.
 func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardResponse, error) {
 	requestBodyBytes, err := json.Marshal(r)
 	if err != nil {
@@ -133,7 +136,7 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 	}
 	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
 		if resp.StatusCode != http.StatusOK {
-			return nil, errors.Errorf("CardsService.GetCard: %v %s: %v", resp.StatusCode, http.StatusText(resp.StatusCode), string(respBodyBytes))
+			return nil, errors.Errorf("CardsService.GetCard: (%d) %v", resp.StatusCode, string(respBodyBytes))
 		}
 		return nil, err
 	}
@@ -151,6 +154,7 @@ func NewCommentsService(client *Client) *CommentsService {
 	}
 }
 
+// AddComment adds a comment.
 func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (*AddCommentResponse, error) {
 	requestBodyBytes, err := json.Marshal(r)
 	if err != nil {
@@ -188,7 +192,7 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 	}
 	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
 		if resp.StatusCode != http.StatusOK {
-			return nil, errors.Errorf("CommentsService.AddComment: %v %s: %v", resp.StatusCode, http.StatusText(resp.StatusCode), string(respBodyBytes))
+			return nil, errors.Errorf("CommentsService.AddComment: (%d) %v", resp.StatusCode, string(respBodyBytes))
 		}
 		return nil, err
 	}
@@ -205,6 +209,7 @@ type AddCommentRequest struct {
 	Body string `json:"Body"`
 }
 
+// Person is a human who uses Pace.
 type Person struct {
 	ID string `json:"ID"`
 
@@ -215,25 +220,38 @@ type Person struct {
 	PhotoURL string `json:"PhotoURL"`
 }
 
+// File represents an attached file.
 type File struct {
+
+	// ID is the identifier for this file.
 	ID string `json:"ID"`
 
+	// CTime is the time the file was uploaded.
 	CTime string `json:"CTime"`
 
+	// Name is the name of the file.
 	Name string `json:"Name"`
 
+	// Path is the path of the file.
 	Path string `json:"Path"`
 
+	// ContentType is the type of the file.
 	ContentType string `json:"ContentType"`
 
+	// FileType is the type of file. Can be &#34;file&#34;, &#34;video&#34;, &#34;image&#34;, &#34;audio&#34; or
+	// &#34;screenshare&#34;.
 	FileType string `json:"FileType"`
 
+	// Size is the size of the file in bytes.
 	Size int `json:"Size"`
 
+	// DownloadURL URL which can be used to get the file.
 	DownloadURL string `json:"DownloadURL"`
 
+	// ThumbnailURL is an optional thumbnail URL for this file.
 	ThumbnailURL string `json:"ThumbnailURL"`
 
+	// Author is the person who uploaded the file.
 	Author Person `json:"Author"`
 }
 
@@ -256,6 +274,7 @@ type Comment struct {
 type AddCommentResponse struct {
 	Comment Comment `json:"Comment"`
 
+	// Error is string explaining what went wrong. Empty if everything was fine.
 	Error string `json:"Error,omitempty"`
 }
 
@@ -268,6 +287,8 @@ type RelatedCardsSummary struct {
 }
 
 type Card struct {
+
+	// ID is the unique ID of the card within the org.
 	ID string `json:"ID"`
 
 	CTime string `json:"CTime"`
@@ -292,30 +313,44 @@ type Card struct {
 
 	Tags []string `json:"Tags"`
 
+	// TakenByCurrentUser indicates whether the current user has taken this card or
+	// not.
 	TakenByCurrentUser bool `json:"TakenByCurrentUser"`
 
+	// TakenByPeople is a list of people who have taken responsibility for this Card.
 	TakenByPeople []Person `json:"TakenByPeople"`
 
+	// Files are the list of files that are attached to this Card.
 	Files []File `json:"Files"`
 
 	RelatedCardsSummary RelatedCardsSummary `json:"RelatedCardsSummary"`
 }
 
 type CreateCardRequest struct {
+
+	// OrgID is the org ID in which to create the card.
 	OrgID string `json:"OrgID"`
 
+	// TeamID is the team ID in which to create the card.
 	TeamID string `json:"TeamID"`
 
+	// Title is the title of the card.
 	Title string `json:"Title"`
 
+	// ParentTargetKind is the kind of target to relate this card to (e.g. card or
+	// message)
 	ParentTargetKind string `json:"ParentTargetKind"`
 
+	// ParentTargetID is the ID of the item to relate this new card to.
 	ParentTargetID string `json:"ParentTargetID"`
 }
 
 type CreateCardResponse struct {
+
+	// Card is the card that was just created.
 	Card Card `json:"Card"`
 
+	// Error is string explaining what went wrong. Empty if everything was fine.
 	Error string `json:"Error,omitempty"`
 }
 
@@ -328,5 +363,6 @@ type GetCardRequest struct {
 type GetCardResponse struct {
 	Card Card `json:"Card"`
 
+	// Error is string explaining what went wrong. Empty if everything was fine.
 	Error string `json:"Error,omitempty"`
 }

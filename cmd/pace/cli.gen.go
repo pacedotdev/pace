@@ -41,9 +41,19 @@ func showHelp(args []string) {
 		printUsage()
 		fmt.Println("services:")
 
-		fmt.Println("- CardsService")
+		fmt.Print("- CardsService")
+		commentForCardsService := `CardsService is used to work with cards.`
+		if commentForCardsService != "" {
+			fmt.Print(": ", commentForCardsService)
+		}
+		fmt.Println()
 
-		fmt.Println("- CommentsService")
+		fmt.Print("- CommentsService")
+		commentForCommentsService := ``
+		if commentForCommentsService != "" {
+			fmt.Print(": ", commentForCommentsService)
+		}
+		fmt.Println()
 
 		fmt.Println("for more info: pace help <service>")
 		return
@@ -57,14 +67,26 @@ func showHelpFor(args []string, service string) {
 	case "CardsService":
 		fmt.Printf("methods for %s:\n", service)
 
-		fmt.Println("- CardsService.CreateCard")
+		fmt.Print("- CardsService.CreateCard")
+		commentForCardsServiceCreateCard := `CreateCard creates a new Card.`
+		if commentForCardsServiceCreateCard != "" {
+			fmt.Print(": ", commentForCardsServiceCreateCard)
+		}
+		fmt.Println()
 
-		fmt.Println("- CardsService.GetCard")
+		fmt.Print("- CardsService.GetCard")
+		commentForCardsServiceGetCard := `GetCard gets a card.`
+		if commentForCardsServiceGetCard != "" {
+			fmt.Print(": ", commentForCardsServiceGetCard)
+		}
+		fmt.Println()
 
 	case "CardsService.CreateCard":
 		fmt.Println(`usage for CardsService.CreateCard
 
-  pace CardsService.CreateCard [flags]`)
+  pace CardsService.CreateCard [flags]
+
+flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		var request pace.CreateCardRequest
 		addFlagsForCreateCardRequest(flags, "", &request)
@@ -73,7 +95,9 @@ func showHelpFor(args []string, service string) {
 	case "CardsService.GetCard":
 		fmt.Println(`usage for CardsService.GetCard
 
-  pace CardsService.GetCard [flags]`)
+  pace CardsService.GetCard [flags]
+
+flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		var request pace.GetCardRequest
 		addFlagsForGetCardRequest(flags, "", &request)
@@ -82,12 +106,19 @@ func showHelpFor(args []string, service string) {
 	case "CommentsService":
 		fmt.Printf("methods for %s:\n", service)
 
-		fmt.Println("- CommentsService.AddComment")
+		fmt.Print("- CommentsService.AddComment")
+		commentForCommentsServiceAddComment := `AddComment adds a comment.`
+		if commentForCommentsServiceAddComment != "" {
+			fmt.Print(": ", commentForCommentsServiceAddComment)
+		}
+		fmt.Println()
 
 	case "CommentsService.AddComment":
 		fmt.Println(`usage for CommentsService.AddComment
 
-  pace CommentsService.AddComment [flags]`)
+  pace CommentsService.AddComment [flags]
+
+flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		var request pace.AddCommentRequest
 		addFlagsForAddCommentRequest(flags, "", &request)
@@ -225,13 +256,13 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 
 func addFlagsForAddCommentRequest(flags *flag.FlagSet, prefix string, v *pace.AddCommentRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"OrgID", "", "")
+	flags.StringVar(&v.OrgID, prefix+"OrgID", "", ``)
 
-	flags.StringVar(&v.TargetKind, prefix+"TargetKind", "", "")
+	flags.StringVar(&v.TargetKind, prefix+"TargetKind", "", ``)
 
-	flags.StringVar(&v.TargetID, prefix+"TargetID", "", "")
+	flags.StringVar(&v.TargetID, prefix+"TargetID", "", ``)
 
-	flags.StringVar(&v.Body, prefix+"Body", "", "")
+	flags.StringVar(&v.Body, prefix+"Body", "", ``)
 
 }
 
@@ -246,13 +277,13 @@ func printAddCommentRequest(v *pace.AddCommentRequest) {
 
 func addFlagsForPerson(flags *flag.FlagSet, prefix string, v *pace.Person) {
 
-	flags.StringVar(&v.ID, prefix+"ID", "", "")
+	flags.StringVar(&v.ID, prefix+"ID", "", ``)
 
-	flags.StringVar(&v.Username, prefix+"Username", "", "")
+	flags.StringVar(&v.Username, prefix+"Username", "", ``)
 
-	flags.StringVar(&v.Name, prefix+"Name", "", "")
+	flags.StringVar(&v.Name, prefix+"Name", "", ``)
 
-	flags.StringVar(&v.PhotoURL, prefix+"PhotoURL", "", "")
+	flags.StringVar(&v.PhotoURL, prefix+"PhotoURL", "", ``)
 
 }
 
@@ -267,21 +298,22 @@ func printPerson(v *pace.Person) {
 
 func addFlagsForFile(flags *flag.FlagSet, prefix string, v *pace.File) {
 
-	flags.StringVar(&v.ID, prefix+"ID", "", "")
+	flags.StringVar(&v.ID, prefix+"ID", "", `ID is the identifier for this file.`)
 
-	flags.StringVar(&v.CTime, prefix+"CTime", "", "")
+	flags.StringVar(&v.CTime, prefix+"CTime", "", `CTime is the time the file was uploaded.`)
 
-	flags.StringVar(&v.Name, prefix+"Name", "", "")
+	flags.StringVar(&v.Name, prefix+"Name", "", `Name is the name of the file.`)
 
-	flags.StringVar(&v.Path, prefix+"Path", "", "")
+	flags.StringVar(&v.Path, prefix+"Path", "", `Path is the path of the file.`)
 
-	flags.StringVar(&v.ContentType, prefix+"ContentType", "", "")
+	flags.StringVar(&v.ContentType, prefix+"ContentType", "", `ContentType is the type of the file.`)
 
-	flags.StringVar(&v.FileType, prefix+"FileType", "", "")
+	flags.StringVar(&v.FileType, prefix+"FileType", "", `FileType is the type of file.
+Can be &#34;file&#34;, &#34;video&#34;, &#34;image&#34;, &#34;audio&#34; or &#34;screenshare&#34;.`)
 
-	flags.StringVar(&v.DownloadURL, prefix+"DownloadURL", "", "")
+	flags.StringVar(&v.DownloadURL, prefix+"DownloadURL", "", `DownloadURL URL which can be used to get the file.`)
 
-	flags.StringVar(&v.ThumbnailURL, prefix+"ThumbnailURL", "", "")
+	flags.StringVar(&v.ThumbnailURL, prefix+"ThumbnailURL", "", `ThumbnailURL is an optional thumbnail URL for this file.`)
 
 	addFlagsForPerson(flags, "Author.", &v.Author)
 
@@ -298,15 +330,15 @@ func printFile(v *pace.File) {
 
 func addFlagsForComment(flags *flag.FlagSet, prefix string, v *pace.Comment) {
 
-	flags.StringVar(&v.ID, prefix+"ID", "", "")
+	flags.StringVar(&v.ID, prefix+"ID", "", ``)
 
-	flags.StringVar(&v.CTime, prefix+"CTime", "", "")
+	flags.StringVar(&v.CTime, prefix+"CTime", "", ``)
 
-	flags.StringVar(&v.MTime, prefix+"MTime", "", "")
+	flags.StringVar(&v.MTime, prefix+"MTime", "", ``)
 
-	flags.StringVar(&v.Body, prefix+"Body", "", "")
+	flags.StringVar(&v.Body, prefix+"Body", "", ``)
 
-	flags.StringVar(&v.BodyHTML, prefix+"BodyHTML", "", "")
+	flags.StringVar(&v.BodyHTML, prefix+"BodyHTML", "", ``)
 
 	addFlagsForPerson(flags, "Author.", &v.Author)
 
@@ -327,7 +359,7 @@ func addFlagsForAddCommentResponse(flags *flag.FlagSet, prefix string, v *pace.A
 
 	addFlagsForComment(flags, "Comment.", &v.Comment)
 
-	flags.StringVar(&v.Error, prefix+"Error", "", "")
+	flags.StringVar(&v.Error, prefix+"Error", "", `Error is string explaining what went wrong. Empty if everything was fine.`)
 
 }
 
@@ -355,25 +387,25 @@ func printRelatedCardsSummary(v *pace.RelatedCardsSummary) {
 
 func addFlagsForCard(flags *flag.FlagSet, prefix string, v *pace.Card) {
 
-	flags.StringVar(&v.ID, prefix+"ID", "", "")
+	flags.StringVar(&v.ID, prefix+"ID", "", `ID is the unique ID of the card within the org.`)
 
-	flags.StringVar(&v.CTime, prefix+"CTime", "", "")
+	flags.StringVar(&v.CTime, prefix+"CTime", "", ``)
 
-	flags.StringVar(&v.MTime, prefix+"MTime", "", "")
+	flags.StringVar(&v.MTime, prefix+"MTime", "", ``)
 
-	flags.StringVar(&v.TeamID, prefix+"TeamID", "", "")
+	flags.StringVar(&v.TeamID, prefix+"TeamID", "", ``)
 
-	flags.StringVar(&v.Slug, prefix+"Slug", "", "")
+	flags.StringVar(&v.Slug, prefix+"Slug", "", ``)
 
-	flags.StringVar(&v.Title, prefix+"Title", "", "")
+	flags.StringVar(&v.Title, prefix+"Title", "", ``)
 
-	flags.StringVar(&v.Status, prefix+"Status", "", "")
+	flags.StringVar(&v.Status, prefix+"Status", "", ``)
 
 	addFlagsForPerson(flags, "Author.", &v.Author)
 
-	flags.StringVar(&v.Body, prefix+"Body", "", "")
+	flags.StringVar(&v.Body, prefix+"Body", "", ``)
 
-	flags.StringVar(&v.BodyHTML, prefix+"BodyHTML", "", "")
+	flags.StringVar(&v.BodyHTML, prefix+"BodyHTML", "", ``)
 
 	// []string not supported yet
 
@@ -396,15 +428,15 @@ func printCard(v *pace.Card) {
 
 func addFlagsForCreateCardRequest(flags *flag.FlagSet, prefix string, v *pace.CreateCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"OrgID", "", "")
+	flags.StringVar(&v.OrgID, prefix+"OrgID", "", `OrgID is the org ID in which to create the card.`)
 
-	flags.StringVar(&v.TeamID, prefix+"TeamID", "", "")
+	flags.StringVar(&v.TeamID, prefix+"TeamID", "", `TeamID is the team ID in which to create the card.`)
 
-	flags.StringVar(&v.Title, prefix+"Title", "", "")
+	flags.StringVar(&v.Title, prefix+"Title", "", `Title is the title of the card.`)
 
-	flags.StringVar(&v.ParentTargetKind, prefix+"ParentTargetKind", "", "")
+	flags.StringVar(&v.ParentTargetKind, prefix+"ParentTargetKind", "", `ParentTargetKind is the kind of target to relate this card to (e.g. card or message)`)
 
-	flags.StringVar(&v.ParentTargetID, prefix+"ParentTargetID", "", "")
+	flags.StringVar(&v.ParentTargetID, prefix+"ParentTargetID", "", `ParentTargetID is the ID of the item to relate this new card to.`)
 
 }
 
@@ -421,7 +453,7 @@ func addFlagsForCreateCardResponse(flags *flag.FlagSet, prefix string, v *pace.C
 
 	addFlagsForCard(flags, "Card.", &v.Card)
 
-	flags.StringVar(&v.Error, prefix+"Error", "", "")
+	flags.StringVar(&v.Error, prefix+"Error", "", `Error is string explaining what went wrong. Empty if everything was fine.`)
 
 }
 
@@ -436,9 +468,9 @@ func printCreateCardResponse(v *pace.CreateCardResponse) {
 
 func addFlagsForGetCardRequest(flags *flag.FlagSet, prefix string, v *pace.GetCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"OrgID", "", "")
+	flags.StringVar(&v.OrgID, prefix+"OrgID", "", ``)
 
-	flags.StringVar(&v.CardID, prefix+"CardID", "", "")
+	flags.StringVar(&v.CardID, prefix+"CardID", "", ``)
 
 }
 
@@ -455,7 +487,7 @@ func addFlagsForGetCardResponse(flags *flag.FlagSet, prefix string, v *pace.GetC
 
 	addFlagsForCard(flags, "Card.", &v.Card)
 
-	flags.StringVar(&v.Error, prefix+"Error", "", "")
+	flags.StringVar(&v.Error, prefix+"Error", "", `Error is string explaining what went wrong. Empty if everything was fine.`)
 
 }
 

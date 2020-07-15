@@ -40,7 +40,12 @@ func showHelp(args []string) {
 		printUsage()
 		fmt.Println("services:")
 		<%= for (service) in def.Services { %>
-			fmt.Println("- <%= service.Name %>")
+			fmt.Print("- <%= service.Name %>")
+			commentFor<%= service.Name %> := `<%= service.Comment %>`
+			if commentFor<%= service.Name %> != "" {
+				fmt.Print(": ", commentFor<%= service.Name %>)
+			}
+			fmt.Println()
 		<% } %>
 		fmt.Println("for more info: pace help <service>")
 		return
@@ -54,13 +59,20 @@ func showHelpFor(args []string, service string) {
 	case "<%= service.Name %>":
 		fmt.Printf("methods for %s:\n", service)
 		<%= for (method) in service.Methods { %>
-			fmt.Println("- <%= service.Name %>.<%= method.Name %>")
+			fmt.Print("- <%= service.Name %>.<%= method.Name %>")
+			commentFor<%= service.Name %><%= method.Name %> := `<%= method.Comment %>`
+			if commentFor<%= service.Name %><%= method.Name %> != "" {
+				fmt.Print(": ", commentFor<%= service.Name %><%= method.Name %>)
+			}
+			fmt.Println()
 		<% } %>
 	<%= for (method) in service.Methods { %>
 	case "<%= service.Name %>.<%= method.Name %>":
 		fmt.Println(`usage for <%= service.Name %>.<%= method.Name %>
 
-  pace <%= service.Name %>.<%= method.Name %> [flags]`)
+  pace <%= service.Name %>.<%= method.Name %> [flags]
+
+flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		var request pace.<%= method.InputObject.TypeName %>
 		addFlagsFor<%= method.InputObject.TypeName %>(flags, "", &request)
@@ -129,7 +141,7 @@ func printUsage() {
 			<% } else if (field.Type.IsObject) { %>
 			addFlagsFor<%= field.Type.TypeName %>(flags, "<%= field.Name %>.", &v.<%= field.Name %>)
 			<% } else if (field.Type.TypeName == "string") { %>
-				flags.StringVar(&v.<%= field.Name %>, prefix+"<%= field.Name %>", "", "")
+				flags.StringVar(&v.<%= field.Name %>, prefix+"<%= field.Name %>", "", `<%= field.Comment %>`)
 			<% } %>
 		<% } %>
 	}
