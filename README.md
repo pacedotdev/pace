@@ -1,4 +1,6 @@
-# Pace CLI (and Go client library)
+# Pace CLI
+
+![](pace.dev-banner.jpg)
 
 ## Pace CLI
 
@@ -70,7 +72,7 @@ func run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	
+
 	fmt.Println("Card 12:", resp.Card.Title)
 }
 ```
