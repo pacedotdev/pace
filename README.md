@@ -89,17 +89,22 @@ func run(ctx context.Context) error {
 
 # Pace JSON/HTTP API
 
-You can make HTTP calls directly to the `https://pace.dev/api` endpoint by encoding the request fields as a JSON object in the body of a `POST` request:
+You can make plain old HTTP calls with JSON payloads to interact with Pace.
 
-* You will need an API key ([Read about API keys in Pace](https://pace.dev/blog/2020/07/01/docs-api-keys.html))
+* Make calls directly to `https://pace.dev/api`
+* Set the `Content-Type` header to `application/json`
+* Use `POST` method
+* Set `X-API-KEY` header to your [api key](https://pace.dev/blog/2020/07/01/docs-api-keys.html)
 
 ```
+POST https://pace.dev/api/CardsService.GetCard
 Content-Type: application/json
 X-API-KEY: your-api-key
-POST https://pace.dev/api/CardsService.GetCard
+
 {
 	"OrgID": "your-org-id",
 	"CardID": "12",
 }
 ```
 
+The response varies depending on which method you're calling, but there is always an `Error` string field which is empty (along with a `200` status code) if the operation was successful.
