@@ -1,4 +1,4 @@
-# ![](pace-logo-square.png) Welcome to Pace.
+Welcome to Pace. This repository contains:
 
 * [Pace CLI](#pace-cli)
 * [Go client library](#go-client-library)
