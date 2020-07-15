@@ -4,7 +4,7 @@ Learn about how Pace for Developers works:
 
 * [Read about API keys in Pace](https://pace.dev/blog/2020/07/01/docs-api-keys.html)
 
-## On this page
+### On this page
 
 * [Pace CLI (command line interface)](#pace-cli)
 * [Go client library](#go-client-library)
