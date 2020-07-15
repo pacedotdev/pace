@@ -2,7 +2,7 @@
 
 # Welcome to Pace for Developers. 
 
-Learn about how Pace for Developers works:
+If you're new here, we recommend you take a few minutes to understand how Pace for Developers works:
 
 * [Read about API keys in Pace](https://pace.dev/blog/2020/07/01/docs-api-keys.html)
 
@@ -10,7 +10,7 @@ Learn about how Pace for Developers works:
 
 * [Pace CLI (command line interface)](#pace-cli)
 * [Go client library](#go-client-library)
-* [Pace JSON/HTTP API](#pace-json-http-api)
+* [Pace JSON/HTTP API](#pace-jsonhttp-api)
 
 # Pace CLI
 
