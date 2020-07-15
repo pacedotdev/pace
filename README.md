@@ -1,8 +1,7 @@
-# Pace CLI
 
 ![](pace.dev-banner.jpg)
 
-## Pace CLI
+# Pace CLI
 
 To install the Pace CLI:
 
@@ -34,7 +33,7 @@ Flags:
 
 ```
 
-## Go client
+# Go client library
 
 To use the Go client:
 
