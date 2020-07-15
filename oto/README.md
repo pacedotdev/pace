@@ -6,4 +6,4 @@ The definition can be found in the `definition` folder.
 
 The Oto tooling combines the definition with the templates to generate simple API clients like the Go client library, and the Pace CLI tool.
 
-* [Learn more about the Oto project](https://github.com/pacedotdev/oto)
+* **What next?** [Learn more about the Oto project](https://github.com/pacedotdev/oto)
