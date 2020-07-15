@@ -1,3 +1,4 @@
+Welcome to Pace.
 
 * [Pace CLI](#pace-cli)
 * [Go client library](#go-client-library)
