@@ -1,3 +1,5 @@
+![](pace.dev-banner.jpg)
+
 # Welcome to Pace for Developers. 
 
 Learn about how Pace for Developers works:
@@ -9,8 +11,6 @@ Learn about how Pace for Developers works:
 * [Pace CLI (command line interface)](#pace-cli)
 * [Go client library](#go-client-library)
 * [Pace JSON/HTTP API](#pace-json-http-api)
-
-![](pace.dev-banner.jpg)
 
 # Pace CLI
 
