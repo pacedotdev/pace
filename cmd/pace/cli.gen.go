@@ -120,6 +120,7 @@ flags:`)
 
   pace CardsService.GetCard [flags]
 
+  
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		// add flags for documentation purposes

@@ -6,6 +6,9 @@ import (
 	"bytes"
 	"compress/gzip"
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -28,13 +31,16 @@ type Client struct {
 	Debug func(s string)
 	// apiKey is the API key to use when interacting with the server.
 	apiKey string
+	// secret is the Secret to make the HMAC signature
+	secret []byte
 }
 
 // New makes a new Client.
-func New(apiKey string) *Client {
+func New(apiKey, secret string) *Client {
 	c := &Client{
 		RemoteHost: "https://pace.dev",
 		apiKey:     apiKey,
+		secret:     []byte(secret),
 		Debug:      func(s string) {},
 		HTTPClient: &http.Client{Timeout: 10 * time.Second},
 	}
@@ -59,14 +65,21 @@ func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*Cr
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.CreateCard: marshal CreateCardRequest")
 	}
+	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.CreateCard: generate signature CreateCardRequest")
+	}
+
 	url := s.client.RemoteHost + "/api/CardsService.CreateCard"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf("signature %s", signature))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.CreateCard: NewRequest")
 	}
 	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept-Encoding", "gzip")
 	req = req.WithContext(ctx)
@@ -110,14 +123,21 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.GetCard: marshal GetCardRequest")
 	}
+	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.GetCard: generate signature GetCardRequest")
+	}
+
 	url := s.client.RemoteHost + "/api/CardsService.GetCard"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf("signature %s", signature))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.GetCard: NewRequest")
 	}
 	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept-Encoding", "gzip")
 	req = req.WithContext(ctx)
@@ -172,14 +192,21 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 	if err != nil {
 		return nil, errors.Wrap(err, "CommentsService.AddComment: marshal AddCommentRequest")
 	}
+	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CommentsService.AddComment: generate signature AddCommentRequest")
+	}
+
 	url := s.client.RemoteHost + "/api/CommentsService.AddComment"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf("signature %s", signature))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
 	if err != nil {
 		return nil, errors.Wrap(err, "CommentsService.AddComment: NewRequest")
 	}
 	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept-Encoding", "gzip")
 	req = req.WithContext(ctx)
@@ -374,4 +401,13 @@ type GetCardRequest struct {
 
 type GetCardResponse struct {
 	Card Card `json:"Card"`
+}
+
+func genMAC(message, secret []byte) (string, error) {
+	mac := hmac.New(sha256.New, secret)
+	if _, err := mac.Write(message); err != nil {
+		return "", err
+	}
+	sig := hex.EncodeToString(mac.Sum(nil))
+	return sig, nil
 }

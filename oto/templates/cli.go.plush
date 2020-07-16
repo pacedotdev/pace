@@ -144,7 +144,7 @@ func printUsage() {
 			}
 			if secret == "" {
 				return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
-			}
+			}			
 			client := pace.New(apikey, secret)
 			client.RemoteHost = host
 			if debug {
