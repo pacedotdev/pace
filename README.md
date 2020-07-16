@@ -82,7 +82,7 @@ func run(ctx context.Context) error {
 	client := pace.New(apikey, secret)
 	cardsService := pace.NewCardsService(client)
 	
-	resp, err := cardsService.GetCard(pace.CreateCardRequest{
+	resp, err := cardsService.GetCard(ctx, pace.CreateCardRequest{
 		OrgID:  "your-org-id",
 		CardID: "12",
 	})

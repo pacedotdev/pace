@@ -72,7 +72,6 @@ func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*Cr
 
 	url := s.client.RemoteHost + "/api/CardsService.CreateCard"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
-	s.client.Debug(fmt.Sprintf("signature %s", signature))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
 	if err != nil {
@@ -130,7 +129,6 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 
 	url := s.client.RemoteHost + "/api/CardsService.GetCard"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
-	s.client.Debug(fmt.Sprintf("signature %s", signature))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
 	if err != nil {
@@ -199,7 +197,6 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 
 	url := s.client.RemoteHost + "/api/CommentsService.AddComment"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
-	s.client.Debug(fmt.Sprintf("signature %s", signature))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
 	if err != nil {
