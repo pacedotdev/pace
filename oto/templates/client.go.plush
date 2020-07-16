@@ -6,6 +6,9 @@ import (
 	"bytes"
 	"compress/gzip"
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -30,13 +33,16 @@ type Client struct {
 	Debug func(s string)
 	// apiKey is the API key to use when interacting with the server.
 	apiKey 		string
+	// secret is the Secret to make the HMAC signature
+	secret []byte
 }
 
 // New makes a new Client.
-func New(apiKey string) *Client {
+func New(apiKey, secret string) *Client {
 	c := &Client{
 		RemoteHost: "https://pace.dev",
 		apiKey: apiKey,
+		secret: []byte(secret),
 		Debug: func(s string) {},
 		HTTPClient: &http.Client{Timeout:10*time.Second},
 	}
@@ -61,6 +67,11 @@ func New<%= service.Name %>(client *Client) *<%= service.Name %> {
 	if err != nil {
 		return nil, errors.Wrap(err, "<%= service.Name %>.<%= method.Name %>: marshal <%= method.InputObject.TypeName %>")
 	}
+	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "<%= service.Name %>.<%= method.Name %>: generate signature <%= method.InputObject.TypeName %>")
+	}
+
 	url := s.client.RemoteHost + "/api/<%= service.Name %>.<%= method.Name %>"
 	s.client.Debug(fmt.Sprintf("POST %s", url))
 	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
@@ -69,6 +80,7 @@ func New<%= service.Name %>(client *Client) *<%= service.Name %> {
 		return nil, errors.Wrap(err, "<%= service.Name %>.<%= method.Name %>: NewRequest")
 	}
 	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept-Encoding", "gzip")
 	req = req.WithContext(ctx)
@@ -119,3 +131,13 @@ func New<%= service.Name %>(client *Client) *<%= service.Name %> {
 		}
 	<% } %>
 <% } %>
+
+
+func genMAC(message, secret []byte) (string, error) {
+	mac := hmac.New(sha256.New, secret)
+	if _, err := mac.Write(message); err != nil {
+		return "", err
+	}
+	sig := hex.EncodeToString(mac.Sum(nil))
+	return sig, nil
+}
