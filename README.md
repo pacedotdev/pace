@@ -14,40 +14,28 @@ If you're new here, we recommend you take a few minutes to understand how Pace f
 
 # Pace CLI
 
-To install the Pace command line interface:
+The Pace command line interface provides programatic access to Pace.
 
 ```bash
-go install github.com/pacedotdev/pace/cmd/pace
+pace help
+pace list
+pace templates
+pace <service>.<method> -Flags=value
 ```
 
-Test it, and see the help:
+See the help:
 
 ```bash
 $ pace help
 ```
 
-And check the version with:
+Check the version:
 
 ```bash
 $ pace version
 ```
 
-## Discover with the Pace CLI
-
-The Pace CLI is self describing. Start by listing the services and methods:
-
-```bash
-pace templates
-```
-
-The Pace CLI will print some example usage commands for you to copy and paste.
-
-And get specific help using `pace help`:
-
-```bash
-$ pace help CardsService
-$ pace help CardsService.CreateCard
-```
+* **What next?** To learn more, see the [Pace CLI documentation](https://pace.dev/app/docs/cli)
 
 # Go client library
 
