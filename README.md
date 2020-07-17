@@ -78,10 +78,11 @@ func main() {
 
 func run(ctx context.Context) error {
 	apikey := os.Getenv("PACE_API_KEY")
-	client := pace.New(apikey)
+	secret := os.Getenv("PACE_API_SECRET")
+	client := pace.New(apikey, secret)
 	cardsService := pace.NewCardsService(client)
 	
-	resp, err := cardsService.GetCard(pace.CreateCardRequest{
+	resp, err := cardsService.GetCard(ctx, pace.CreateCardRequest{
 		OrgID:  "your-org-id",
 		CardID: "12",
 	})

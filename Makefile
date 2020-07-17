@@ -9,14 +9,14 @@ install:
 
 genoto:
 	oto \
-		-template ./oto/templates/client.go.plush -out ./pace.gen.go \
+		-template ./oto/client.go.plush -out ./pace.gen.go \
 		-pkg pace \
-		./oto/definition
+		./oto
 	gofmt -w ./pace.gen.go ./pace.gen.go
 	oto \
-		-template ./oto/templates/cli.go.plush -out ./cmd/pace/cli.gen.go \
+		-template ./oto/cli.go.plush -out ./cmd/pace/cli.gen.go \
 		-pkg pace \
-		./oto/definition
+		./oto
 	gofmt -w ./cmd/pace/cli.gen.go ./cmd/pace/cli.gen.go
 
 release:

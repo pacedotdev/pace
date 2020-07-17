@@ -1,3 +1,5 @@
+DO NOT EDIT: The `.go` and `.plush` files in this folder are copied here from an protected location.
+
 # Pace API definition
 
 Pace uses the [Oto project](https://github.com/pacedotdev/oto) to describe its API using Go (Golang) interfaces.
