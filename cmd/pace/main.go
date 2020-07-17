@@ -13,9 +13,14 @@ import (
 
 */
 
-// ShortSHA is the git short hash at the time of this
-// build.
-var ShortSHA = `(missing)`
+var (
+	// ShortSHA is the git short hash at the time of this
+	// build.
+	ShortSHA = `(missing)`
+	// Version is the version number set when this tool was
+	// built.
+	Version = `(missing)`
+)
 
 const (
 	exitCodeErr       = 1

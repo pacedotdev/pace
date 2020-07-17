@@ -22,6 +22,9 @@ func runCommand(ctx context.Context, args []string) error {
 	case "help":
 		showHelp(args)
 		return nil
+	case "version":
+		fmt.Println(Version)
+		return nil
 	case "list":
 		printList()
 		return nil
@@ -40,7 +43,7 @@ func runCommand(ctx context.Context, args []string) error {
 
 	default:
 		fmt.Println("unknown command:", args[1])
-		showHelp(nil)
+		showHelp(args)
 	}
 	return nil
 }
@@ -171,11 +174,12 @@ flags:`)
 
 	default:
 		fmt.Println(service, "is not supported")
-		showHelp(nil)
+		showHelp(args)
 	}
 }
 
 func printUsage() {
+	fmt.Printf("%s (%s)\n", Version, ShortSHA)
 	fmt.Println(`Usage:
   pace <service>.<method> [args...]`)
 	fmt.Println()
@@ -317,6 +321,10 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 }
 
 func printFlagDefaults(args []string) {
+	if len(args) == 0 {
+		// avoid empty arg panics
+		args = []string{"pace"}
+	}
 	fmt.Println()
 	fmt.Println("Flags:")
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)

@@ -5,7 +5,7 @@ VERSION = v0.1.0
 .PHONY: install genoto
 
 install:
-	cd cmd/pace && go install
+	cd cmd/pace && go install -ldflags="-X 'main.ShortSHA=${SHORT_SHA}' -X 'main.Version=${VERSION}'"
 
 genoto:
 	oto \
@@ -20,4 +20,4 @@ genoto:
 	gofmt -w ./cmd/pace/cli.gen.go ./cmd/pace/cli.gen.go
 
 release:
-	cd cmd/pace && go build -o pace -ldflags="-X 'main.ShortSHA=$SHORT_SHA'"
+	cd cmd/pace && go build -o pace -ldflags="-X 'main.ShortSHA=${SHORT_SHA}' -X 'main.Version=${VERSION}'"
