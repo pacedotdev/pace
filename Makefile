@@ -1,3 +1,6 @@
+githash = $(shell git rev-parse --short HEAD)
+SHORT_SHA = ${githash}
+VERSION = v0.1.0
 
 .PHONY: install genoto
 
@@ -15,3 +18,6 @@ genoto:
 		-pkg pace \
 		./oto/definition
 	gofmt -w ./cmd/pace/cli.gen.go ./cmd/pace/cli.gen.go
+
+release:
+	cd cmd/pace && go build -o pace -ldflags="-X 'main.ShortSHA=$SHORT_SHA'"
