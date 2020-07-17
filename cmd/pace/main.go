@@ -13,6 +13,10 @@ import (
 
 */
 
+// ShortSHA is the git short hash at the time of this
+// build.
+var ShortSHA = `(missing)`
+
 const (
 	exitCodeErr       = 1
 	exitCodeInterrupt = 2
