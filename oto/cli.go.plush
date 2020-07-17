@@ -93,8 +93,8 @@ flags:`)
 			host string
 			debug bool
 		)
-		flags.StringVar(&apikey, "apikey", "", "Pace API Key")
-		flags.StringVar(&secret, "secret", "", "Pace API secret")
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
 		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.<%= method.InputObject.TypeName %>
@@ -124,8 +124,8 @@ func printUsage() {
 				host string
 				debug bool
 			)
-			flags.StringVar(&apikey, "apikey", "", "Pace API Key")
-			flags.StringVar(&secret, "secret", "", "Pace API secret")
+			flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+			flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 			flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
 			flags.BoolVar(&debug, "debug", false, "prints debug information")
 			var request pace.<%= method.InputObject.TypeName %>
@@ -171,9 +171,11 @@ func printFlagDefaults(args []string) {
 		apikey string
 		host string
 		debug bool
+		secret string
 	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key")
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
 	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	flags.PrintDefaults()
 }

@@ -107,8 +107,8 @@ flags:`)
 			host   string
 			debug  bool
 		)
-		flags.StringVar(&apikey, "apikey", "", "Pace API Key")
-		flags.StringVar(&secret, "secret", "", "Pace API secret")
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
 		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.CreateCardRequest
@@ -129,8 +129,8 @@ flags:`)
 			host   string
 			debug  bool
 		)
-		flags.StringVar(&apikey, "apikey", "", "Pace API Key")
-		flags.StringVar(&secret, "secret", "", "Pace API secret")
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
 		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.GetCardRequest
@@ -161,8 +161,8 @@ flags:`)
 			host   string
 			debug  bool
 		)
-		flags.StringVar(&apikey, "apikey", "", "Pace API Key")
-		flags.StringVar(&secret, "secret", "", "Pace API secret")
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
 		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.AddCommentRequest
@@ -189,8 +189,8 @@ func CardsServiceCreateCard(ctx context.Context, args []string) error {
 		host   string
 		debug  bool
 	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key")
-	flags.StringVar(&secret, "secret", "", "Pace API secret")
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
 	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	var request pace.CreateCardRequest
@@ -234,8 +234,8 @@ func CardsServiceGetCard(ctx context.Context, args []string) error {
 		host   string
 		debug  bool
 	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key")
-	flags.StringVar(&secret, "secret", "", "Pace API secret")
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
 	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	var request pace.GetCardRequest
@@ -279,8 +279,8 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 		host   string
 		debug  bool
 	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key")
-	flags.StringVar(&secret, "secret", "", "Pace API secret")
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
 	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	var request pace.AddCommentRequest
@@ -324,9 +324,11 @@ func printFlagDefaults(args []string) {
 		apikey string
 		host   string
 		debug  bool
+		secret string
 	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key")
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
 	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
 	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	flags.PrintDefaults()
 }
