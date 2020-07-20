@@ -24,5 +24,5 @@ $ git push origin v0.1.0
 Then:
 
 ```bash
-goreleaser --snapshot
+make release
 ```
