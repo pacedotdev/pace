@@ -23,4 +23,4 @@ cmdbuild:
 	cd cmd/pace && goreleaser --snapshot --skip-publish --rm-dist
 
 release:
-	cd cmd/pace && goreleaser
+	cd cmd/pace && goreleaser --rm-dist
