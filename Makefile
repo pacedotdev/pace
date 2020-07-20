@@ -1,11 +1,10 @@
 githash = $(shell git rev-parse --short HEAD)
 SHORT_SHA = ${githash}
-VERSION = v0.1.0
 
 .PHONY: install genoto
 
 install:
-	cd cmd/pace && go install -ldflags="-X 'main.ShortSHA=${SHORT_SHA}' -X 'main.Version=${VERSION}'"
+	cd cmd/pace && go install -ldflags="-X 'main.ShortSHA=${SHORT_SHA}' -X 'main.Version=dev-${SHORT_SHA}'"
 
 genoto:
 	oto \
