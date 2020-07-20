@@ -10,6 +10,8 @@ Install Go Releaser.
 brew install goreleaser/tap/goreleaser
 ```
 
+* Make a [New personal access token on GitHub](https://github.com/settings/tokens/new) and set it as the `GITHUB_TOKEN` environment variable
+
 ## Releasing
 
 Tag the repo:
