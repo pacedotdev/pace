@@ -1,4 +1,4 @@
-DO NOT EDIT: The `.go` and `.plush` files in this folder are copied here from an protected location.
+DO NOT EDIT: The `.go` and `.plush` files in this folder are copied here from a protected location.
 
 # Pace API definition
 
