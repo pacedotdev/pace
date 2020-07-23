@@ -242,162 +242,162 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 }
 
 type AddCommentRequest struct {
-	OrgID string `json:"OrgID"`
+	OrgID string `json:"orgID"`
 
-	TargetKind string `json:"TargetKind"`
+	TargetKind string `json:"targetKind"`
 
-	TargetID string `json:"TargetID"`
+	TargetID string `json:"targetID"`
 
-	Body string `json:"Body"`
+	Body string `json:"body"`
 }
 
 // Person is a human who uses Pace.
 type Person struct {
-	ID string `json:"ID"`
+	ID string `json:"id"`
 
-	Username string `json:"Username"`
+	Username string `json:"username"`
 
-	Name string `json:"Name"`
+	Name string `json:"name"`
 
-	PhotoURL string `json:"PhotoURL"`
+	PhotoURL string `json:"photoURL"`
 }
 
 // File represents an attached file.
 type File struct {
 
 	// ID is the identifier for this file.
-	ID string `json:"ID"`
+	ID string `json:"id"`
 
 	// CTime is the time the file was uploaded.
-	CTime string `json:"CTime"`
+	CTime string `json:"cTime"`
 
 	// Name is the name of the file.
-	Name string `json:"Name"`
+	Name string `json:"name"`
 
 	// Path is the path of the file.
-	Path string `json:"Path"`
+	Path string `json:"path"`
 
 	// ContentType is the type of the file.
-	ContentType string `json:"ContentType"`
+	ContentType string `json:"contentType"`
 
 	// FileType is the type of file. Can be &#34;file&#34;, &#34;video&#34;, &#34;image&#34;, &#34;audio&#34; or
 	// &#34;screenshare&#34;.
-	FileType string `json:"FileType"`
+	FileType string `json:"fileType"`
 
 	// Size is the size of the file in bytes.
-	Size int `json:"Size"`
+	Size int `json:"size"`
 
 	// DownloadURL URL which can be used to get the file.
-	DownloadURL string `json:"DownloadURL"`
+	DownloadURL string `json:"downloadURL"`
 
 	// ThumbnailURL is an optional thumbnail URL for this file.
-	ThumbnailURL string `json:"ThumbnailURL"`
+	ThumbnailURL string `json:"thumbnailURL"`
 
 	// Author is the person who uploaded the file.
-	Author Person `json:"Author"`
+	Author Person `json:"author"`
 }
 
 type Comment struct {
-	ID string `json:"ID"`
+	ID string `json:"id"`
 
-	CTime string `json:"CTime"`
+	CTime string `json:"cTime"`
 
-	MTime string `json:"MTime"`
+	MTime string `json:"mTime"`
 
-	Body string `json:"Body"`
+	Body string `json:"body"`
 
-	BodyHTML string `json:"BodyHTML"`
+	BodyHTML string `json:"bodyHTML"`
 
-	Author Person `json:"Author"`
+	Author Person `json:"author"`
 
-	Files []File `json:"Files"`
+	Files []File `json:"files"`
 }
 
 type AddCommentResponse struct {
-	Comment Comment `json:"Comment"`
+	Comment Comment `json:"comment"`
 }
 
 type RelatedCardsSummary struct {
-	Total int `json:"Total"`
+	Total int `json:"total"`
 
-	Done int `json:"Done"`
+	Done int `json:"done"`
 
-	Progress int `json:"Progress"`
+	Progress int `json:"progress"`
 }
 
 type Card struct {
 
 	// ID is the unique ID of the card within the org.
-	ID string `json:"ID"`
+	ID string `json:"id"`
 
-	CTime string `json:"CTime"`
+	CTime string `json:"cTime"`
 
-	MTime string `json:"MTime"`
+	MTime string `json:"mTime"`
 
-	Order float64 `json:"Order"`
+	Order float64 `json:"order"`
 
-	TeamID string `json:"TeamID"`
+	TeamID string `json:"teamID"`
 
-	Slug string `json:"Slug"`
+	Slug string `json:"slug"`
 
-	Title string `json:"Title"`
+	Title string `json:"title"`
 
-	Status string `json:"Status"`
+	Status string `json:"status"`
 
-	Author Person `json:"Author"`
+	Author Person `json:"author"`
 
-	Body string `json:"Body"`
+	Body string `json:"body"`
 
-	BodyHTML string `json:"BodyHTML"`
+	BodyHTML string `json:"bodyHTML"`
 
-	Tags []string `json:"Tags"`
+	Tags []string `json:"tags"`
 
 	// TakenByCurrentUser indicates whether the current user has taken this card or
 	// not.
-	TakenByCurrentUser bool `json:"TakenByCurrentUser"`
+	TakenByCurrentUser bool `json:"takenByCurrentUser"`
 
 	// TakenByPeople is a list of people who have taken responsibility for this Card.
-	TakenByPeople []Person `json:"TakenByPeople"`
+	TakenByPeople []Person `json:"takenByPeople"`
 
 	// Files are the list of files that are attached to this Card.
-	Files []File `json:"Files"`
+	Files []File `json:"files"`
 
-	RelatedCardsSummary RelatedCardsSummary `json:"RelatedCardsSummary"`
+	RelatedCardsSummary RelatedCardsSummary `json:"relatedCardsSummary"`
 }
 
 type CreateCardRequest struct {
 
 	// OrgID is the org ID in which to create the card.
-	OrgID string `json:"OrgID"`
+	OrgID string `json:"orgID"`
 
 	// TeamID is the team ID in which to create the card.
-	TeamID string `json:"TeamID"`
+	TeamID string `json:"teamID"`
 
 	// Title is the title of the card.
-	Title string `json:"Title"`
+	Title string `json:"title"`
 
 	// ParentTargetKind is the kind of target to relate this card to (e.g. card or
 	// message)
-	ParentTargetKind string `json:"ParentTargetKind"`
+	ParentTargetKind string `json:"parentTargetKind"`
 
 	// ParentTargetID is the ID of the item to relate this new card to.
-	ParentTargetID string `json:"ParentTargetID"`
+	ParentTargetID string `json:"parentTargetID"`
 }
 
 type CreateCardResponse struct {
 
 	// Card is the card that was just created.
-	Card Card `json:"Card"`
+	Card Card `json:"card"`
 }
 
 type GetCardRequest struct {
-	OrgID string `json:"OrgID"`
+	OrgID string `json:"orgID"`
 
-	CardID string `json:"CardID"`
+	CardID string `json:"cardID"`
 }
 
 type GetCardResponse struct {
-	Card Card `json:"Card"`
+	Card Card `json:"card"`
 }
 
 func genMAC(message, secret []byte) (string, error) {

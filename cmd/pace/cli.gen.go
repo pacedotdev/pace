@@ -104,8 +104,16 @@ func showHelpFor(args []string, service string) {
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		// add flags for documentation purposes
-		common := &commonFlags{}
-		common.addFlags(flags)
+		var (
+			apikey string
+			secret string
+			host   string
+			debug  bool
+		)
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
+		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.CreateCardRequest
 		addFlagsForCreateCardRequest(flags, "", &request)
 		flags.PrintDefaults()
@@ -118,8 +126,16 @@ flags:`)
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		// add flags for documentation purposes
-		common := &commonFlags{}
-		common.addFlags(flags)
+		var (
+			apikey string
+			secret string
+			host   string
+			debug  bool
+		)
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
+		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.GetCardRequest
 		addFlagsForGetCardRequest(flags, "", &request)
 		flags.PrintDefaults()
@@ -142,8 +158,16 @@ flags:`)
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		// add flags for documentation purposes
-		common := &commonFlags{}
-		common.addFlags(flags)
+		var (
+			apikey string
+			secret string
+			host   string
+			debug  bool
+		)
+		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
+		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+		flags.BoolVar(&debug, "debug", false, "prints debug information")
 		var request pace.AddCommentRequest
 		addFlagsForAddCommentRequest(flags, "", &request)
 		flags.PrintDefaults()
@@ -163,28 +187,36 @@ func printUsage() {
 
 func CardsServiceCreateCard(ctx context.Context, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	common := &commonFlags{}
-	common.addFlags(flags)
+	var (
+		apikey string
+		secret string
+		host   string
+		debug  bool
+	)
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
+	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	var request pace.CreateCardRequest
 	addFlagsForCreateCardRequest(flags, "", &request)
 	if err := flags.Parse(args[2:]); err != nil {
 		return err
 	}
-	if common.apikey == "" {
-		common.apikey = os.Getenv("PACE_API_KEY")
+	if apikey == "" {
+		apikey = os.Getenv("PACE_API_KEY")
 	}
-	if common.apikey == "" {
+	if apikey == "" {
 		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
-	if common.secret == "" {
-		common.secret = os.Getenv("PACE_API_SECRET")
+	if secret == "" {
+		secret = os.Getenv("PACE_API_SECRET")
 	}
-	if common.secret == "" {
+	if secret == "" {
 		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
 	}
-	client := pace.New(common.apikey, common.secret)
-	client.RemoteHost = common.host
-	if common.debug {
+	client := pace.New(apikey, secret)
+	client.RemoteHost = host
+	if debug {
 		client.Debug = func(s string) {
 			fmt.Println(s)
 		}
@@ -194,36 +226,42 @@ func CardsServiceCreateCard(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	if !common.silent {
-		printCreateCardResponse(resp)
-	}
+	printCreateCardResponse(resp)
 	return nil
 }
 
 func CardsServiceGetCard(ctx context.Context, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	common := &commonFlags{}
-	common.addFlags(flags)
+	var (
+		apikey string
+		secret string
+		host   string
+		debug  bool
+	)
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
+	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	var request pace.GetCardRequest
 	addFlagsForGetCardRequest(flags, "", &request)
 	if err := flags.Parse(args[2:]); err != nil {
 		return err
 	}
-	if common.apikey == "" {
-		common.apikey = os.Getenv("PACE_API_KEY")
+	if apikey == "" {
+		apikey = os.Getenv("PACE_API_KEY")
 	}
-	if common.apikey == "" {
+	if apikey == "" {
 		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
-	if common.secret == "" {
-		common.secret = os.Getenv("PACE_API_SECRET")
+	if secret == "" {
+		secret = os.Getenv("PACE_API_SECRET")
 	}
-	if common.secret == "" {
+	if secret == "" {
 		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
 	}
-	client := pace.New(common.apikey, common.secret)
-	client.RemoteHost = common.host
-	if common.debug {
+	client := pace.New(apikey, secret)
+	client.RemoteHost = host
+	if debug {
 		client.Debug = func(s string) {
 			fmt.Println(s)
 		}
@@ -233,36 +271,42 @@ func CardsServiceGetCard(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	if !common.silent {
-		printGetCardResponse(resp)
-	}
+	printGetCardResponse(resp)
 	return nil
 }
 
 func CommentsServiceAddComment(ctx context.Context, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	common := &commonFlags{}
-	common.addFlags(flags)
+	var (
+		apikey string
+		secret string
+		host   string
+		debug  bool
+	)
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
+	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	var request pace.AddCommentRequest
 	addFlagsForAddCommentRequest(flags, "", &request)
 	if err := flags.Parse(args[2:]); err != nil {
 		return err
 	}
-	if common.apikey == "" {
-		common.apikey = os.Getenv("PACE_API_KEY")
+	if apikey == "" {
+		apikey = os.Getenv("PACE_API_KEY")
 	}
-	if common.apikey == "" {
+	if apikey == "" {
 		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
-	if common.secret == "" {
-		common.secret = os.Getenv("PACE_API_SECRET")
+	if secret == "" {
+		secret = os.Getenv("PACE_API_SECRET")
 	}
-	if common.secret == "" {
+	if secret == "" {
 		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
 	}
-	client := pace.New(common.apikey, common.secret)
-	client.RemoteHost = common.host
-	if common.debug {
+	client := pace.New(apikey, secret)
+	client.RemoteHost = host
+	if debug {
 		client.Debug = func(s string) {
 			fmt.Println(s)
 		}
@@ -272,9 +316,7 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	if !common.silent {
-		printAddCommentResponse(resp)
-	}
+	printAddCommentResponse(resp)
 	return nil
 }
 
@@ -286,8 +328,16 @@ func printFlagDefaults(args []string) {
 	fmt.Println()
 	fmt.Println("Flags:")
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	common := &commonFlags{}
-	common.addFlags(flags)
+	var (
+		apikey string
+		host   string
+		debug  bool
+		secret string
+	)
+	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
+	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
+	flags.BoolVar(&debug, "debug", false, "prints debug information")
 	flags.PrintDefaults()
 }
 
@@ -734,20 +784,4 @@ func printArgslistGetCardResponse() {
 
 	fmt.Print("-Error= ")
 
-}
-
-type commonFlags struct {
-	apikey string
-	secret string
-	host   string
-	debug  bool
-	silent bool
-}
-
-func (c *commonFlags) addFlags(flags *flag.FlagSet) {
-	flags.StringVar(&c.apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
-	flags.StringVar(&c.secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
-	flags.StringVar(&c.host, "host", "https://pace.dev", "Pace remote host")
-	flags.BoolVar(&c.debug, "debug", false, "prints debug information")
-	flags.BoolVar(&c.silent, "silent", false, "prints no output for successful requests")
 }
