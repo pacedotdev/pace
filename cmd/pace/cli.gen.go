@@ -35,14 +35,29 @@ func runCommand(ctx context.Context, args []string) error {
 	case "CardsService.CreateCard":
 		return CardsServiceCreateCard(ctx, args)
 
+	case "CardsService.DeleteCard":
+		return CardsServiceDeleteCard(ctx, args)
+
 	case "CardsService.GetCard":
 		return CardsServiceGetCard(ctx, args)
+
+	case "CardsService.PutBackCard":
+		return CardsServicePutBackCard(ctx, args)
+
+	case "CardsService.TakeCard":
+		return CardsServiceTakeCard(ctx, args)
+
+	case "CardsService.UpdateCard":
+		return CardsServiceUpdateCard(ctx, args)
 
 	case "CardsService.UpdateCardStatus":
 		return CardsServiceUpdateCardStatus(ctx, args)
 
 	case "CommentsService.AddComment":
 		return CommentsServiceAddComment(ctx, args)
+
+	case "CommentsService.DeleteComment":
+		return CommentsServiceDeleteComment(ctx, args)
 
 	default:
 		fmt.Println("unknown command:", args[1])
@@ -56,14 +71,14 @@ func showHelp(args []string) {
 		printUsage()
 
 		fmt.Print("* CardsService")
-		commentForCardsService := `CardsService is used to work with cards.`
+		commentForCardsService := `CardsService allows you to programmatically manage cards in Pace.`
 		if commentForCardsService != "" {
 			fmt.Print(" - ", commentForCardsService)
 		}
 		fmt.Println()
 
 		fmt.Print("* CommentsService")
-		commentForCommentsService := `CommentsService allows you to create comments in Pace.`
+		commentForCommentsService := `CommentsService allows you to programmatically manage comments in Pace.`
 		if commentForCommentsService != "" {
 			fmt.Print(" - ", commentForCommentsService)
 		}
@@ -92,10 +107,40 @@ func showHelpFor(args []string, service string) {
 		}
 		fmt.Println()
 
+		fmt.Print("* CardsService.DeleteCard")
+		commentForCardsServiceDeleteCard := `DeleteCard deletes a card.`
+		if commentForCardsServiceDeleteCard != "" {
+			fmt.Print(" - ", commentForCardsServiceDeleteCard)
+		}
+		fmt.Println()
+
 		fmt.Print("* CardsService.GetCard")
 		commentForCardsServiceGetCard := `GetCard gets a card.`
 		if commentForCardsServiceGetCard != "" {
 			fmt.Print(" - ", commentForCardsServiceGetCard)
+		}
+		fmt.Println()
+
+		fmt.Print("* CardsService.PutBackCard")
+		commentForCardsServicePutBackCard := `PutBackCard removes a user from the list of responsbile users.
+Undoes TakeCard.`
+		if commentForCardsServicePutBackCard != "" {
+			fmt.Print(" - ", commentForCardsServicePutBackCard)
+		}
+		fmt.Println()
+
+		fmt.Print("* CardsService.TakeCard")
+		commentForCardsServiceTakeCard := `TakeCard takes responsibility for a card.
+Can be undone with PutBackCard.`
+		if commentForCardsServiceTakeCard != "" {
+			fmt.Print(" - ", commentForCardsServiceTakeCard)
+		}
+		fmt.Println()
+
+		fmt.Print("* CardsService.UpdateCard")
+		commentForCardsServiceUpdateCard := `UpdateCard updates the title and body of the card.`
+		if commentForCardsServiceUpdateCard != "" {
+			fmt.Print(" - ", commentForCardsServiceUpdateCard)
 		}
 		fmt.Println()
 
@@ -120,6 +165,20 @@ flags:`)
 		addFlagsForCreateCardRequest(flags, "", &request)
 		flags.PrintDefaults()
 
+	case "CardsService.DeleteCard":
+		fmt.Println(`Usage for CardsService.DeleteCard
+
+  pace CardsService.DeleteCard [flags]
+
+flags:`)
+		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		globals := &globalFlags{}
+		globals.addFlags(flags)
+		var request pace.DeleteCardRequest
+		addFlagsForDeleteCardRequest(flags, "", &request)
+		flags.PrintDefaults()
+
 	case "CardsService.GetCard":
 		fmt.Println(`Usage for CardsService.GetCard
 
@@ -132,6 +191,48 @@ flags:`)
 		globals.addFlags(flags)
 		var request pace.GetCardRequest
 		addFlagsForGetCardRequest(flags, "", &request)
+		flags.PrintDefaults()
+
+	case "CardsService.PutBackCard":
+		fmt.Println(`Usage for CardsService.PutBackCard
+
+  pace CardsService.PutBackCard [flags]
+
+flags:`)
+		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		globals := &globalFlags{}
+		globals.addFlags(flags)
+		var request pace.PutBackCardRequest
+		addFlagsForPutBackCardRequest(flags, "", &request)
+		flags.PrintDefaults()
+
+	case "CardsService.TakeCard":
+		fmt.Println(`Usage for CardsService.TakeCard
+
+  pace CardsService.TakeCard [flags]
+
+flags:`)
+		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		globals := &globalFlags{}
+		globals.addFlags(flags)
+		var request pace.TakeCardRequest
+		addFlagsForTakeCardRequest(flags, "", &request)
+		flags.PrintDefaults()
+
+	case "CardsService.UpdateCard":
+		fmt.Println(`Usage for CardsService.UpdateCard
+
+  pace CardsService.UpdateCard [flags]
+
+flags:`)
+		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		globals := &globalFlags{}
+		globals.addFlags(flags)
+		var request pace.UpdateCardRequest
+		addFlagsForUpdateCardRequest(flags, "", &request)
 		flags.PrintDefaults()
 
 	case "CardsService.UpdateCardStatus":
@@ -158,6 +259,13 @@ flags:`)
 		}
 		fmt.Println()
 
+		fmt.Print("* CommentsService.DeleteComment")
+		commentForCommentsServiceDeleteComment := `DeleteComment deletes a Comment.`
+		if commentForCommentsServiceDeleteComment != "" {
+			fmt.Print(" - ", commentForCommentsServiceDeleteComment)
+		}
+		fmt.Println()
+
 	case "CommentsService.AddComment":
 		fmt.Println(`Usage for CommentsService.AddComment
 
@@ -170,6 +278,20 @@ flags:`)
 		globals.addFlags(flags)
 		var request pace.AddCommentRequest
 		addFlagsForAddCommentRequest(flags, "", &request)
+		flags.PrintDefaults()
+
+	case "CommentsService.DeleteComment":
+		fmt.Println(`Usage for CommentsService.DeleteComment
+
+  pace CommentsService.DeleteComment [flags]
+
+flags:`)
+		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		globals := &globalFlags{}
+		globals.addFlags(flags)
+		var request pace.DeleteCommentRequest
+		addFlagsForDeleteCommentRequest(flags, "", &request)
 		flags.PrintDefaults()
 
 	default:
@@ -222,6 +344,43 @@ func CardsServiceCreateCard(ctx context.Context, args []string) error {
 	return nil
 }
 
+func CardsServiceDeleteCard(ctx context.Context, args []string) error {
+	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	globals := &globalFlags{}
+	globals.addFlags(flags)
+	var request pace.DeleteCardRequest
+	addFlagsForDeleteCardRequest(flags, "", &request)
+	if err := flags.Parse(args[2:]); err != nil {
+		return err
+	}
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
+	}
+	if globals.apikey == "" {
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
+	}
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
+	}
+	if globals.secret == "" {
+		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
+	}
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
+		client.Debug = func(s string) {
+			fmt.Println(s)
+		}
+	}
+	service := pace.NewCardsService(client)
+	resp, err := service.DeleteCard(ctx, request)
+	if err != nil {
+		return err
+	}
+	printDeleteCardResponse(resp)
+	return nil
+}
+
 func CardsServiceGetCard(ctx context.Context, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 	globals := &globalFlags{}
@@ -256,6 +415,117 @@ func CardsServiceGetCard(ctx context.Context, args []string) error {
 		return err
 	}
 	printGetCardResponse(resp)
+	return nil
+}
+
+func CardsServicePutBackCard(ctx context.Context, args []string) error {
+	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	globals := &globalFlags{}
+	globals.addFlags(flags)
+	var request pace.PutBackCardRequest
+	addFlagsForPutBackCardRequest(flags, "", &request)
+	if err := flags.Parse(args[2:]); err != nil {
+		return err
+	}
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
+	}
+	if globals.apikey == "" {
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
+	}
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
+	}
+	if globals.secret == "" {
+		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
+	}
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
+		client.Debug = func(s string) {
+			fmt.Println(s)
+		}
+	}
+	service := pace.NewCardsService(client)
+	resp, err := service.PutBackCard(ctx, request)
+	if err != nil {
+		return err
+	}
+	printPutBackCardResponse(resp)
+	return nil
+}
+
+func CardsServiceTakeCard(ctx context.Context, args []string) error {
+	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	globals := &globalFlags{}
+	globals.addFlags(flags)
+	var request pace.TakeCardRequest
+	addFlagsForTakeCardRequest(flags, "", &request)
+	if err := flags.Parse(args[2:]); err != nil {
+		return err
+	}
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
+	}
+	if globals.apikey == "" {
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
+	}
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
+	}
+	if globals.secret == "" {
+		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
+	}
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
+		client.Debug = func(s string) {
+			fmt.Println(s)
+		}
+	}
+	service := pace.NewCardsService(client)
+	resp, err := service.TakeCard(ctx, request)
+	if err != nil {
+		return err
+	}
+	printTakeCardResponse(resp)
+	return nil
+}
+
+func CardsServiceUpdateCard(ctx context.Context, args []string) error {
+	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	globals := &globalFlags{}
+	globals.addFlags(flags)
+	var request pace.UpdateCardRequest
+	addFlagsForUpdateCardRequest(flags, "", &request)
+	if err := flags.Parse(args[2:]); err != nil {
+		return err
+	}
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
+	}
+	if globals.apikey == "" {
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
+	}
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
+	}
+	if globals.secret == "" {
+		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
+	}
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
+		client.Debug = func(s string) {
+			fmt.Println(s)
+		}
+	}
+	service := pace.NewCardsService(client)
+	resp, err := service.UpdateCard(ctx, request)
+	if err != nil {
+		return err
+	}
+	printUpdateCardResponse(resp)
 	return nil
 }
 
@@ -333,6 +603,43 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 	return nil
 }
 
+func CommentsServiceDeleteComment(ctx context.Context, args []string) error {
+	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	globals := &globalFlags{}
+	globals.addFlags(flags)
+	var request pace.DeleteCommentRequest
+	addFlagsForDeleteCommentRequest(flags, "", &request)
+	if err := flags.Parse(args[2:]); err != nil {
+		return err
+	}
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
+	}
+	if globals.apikey == "" {
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
+	}
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
+	}
+	if globals.secret == "" {
+		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
+	}
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
+		client.Debug = func(s string) {
+			fmt.Println(s)
+		}
+	}
+	service := pace.NewCommentsService(client)
+	resp, err := service.DeleteComment(ctx, request)
+	if err != nil {
+		return err
+	}
+	printDeleteCommentResponse(resp)
+	return nil
+}
+
 func printFlagDefaults(args []string) {
 	if len(args) == 0 {
 		// avoid empty arg panics
@@ -355,10 +662,40 @@ func printList() {
 	}
 	fmt.Println()
 
+	fmt.Printf("CardsService.DeleteCard")
+	commentCardsServiceDeleteCard := `DeleteCard deletes a card.`
+	if len(commentCardsServiceDeleteCard) > 0 {
+		fmt.Printf(" - %s", commentCardsServiceDeleteCard)
+	}
+	fmt.Println()
+
 	fmt.Printf("CardsService.GetCard")
 	commentCardsServiceGetCard := `GetCard gets a card.`
 	if len(commentCardsServiceGetCard) > 0 {
 		fmt.Printf(" - %s", commentCardsServiceGetCard)
+	}
+	fmt.Println()
+
+	fmt.Printf("CardsService.PutBackCard")
+	commentCardsServicePutBackCard := `PutBackCard removes a user from the list of responsbile users.
+Undoes TakeCard.`
+	if len(commentCardsServicePutBackCard) > 0 {
+		fmt.Printf(" - %s", commentCardsServicePutBackCard)
+	}
+	fmt.Println()
+
+	fmt.Printf("CardsService.TakeCard")
+	commentCardsServiceTakeCard := `TakeCard takes responsibility for a card.
+Can be undone with PutBackCard.`
+	if len(commentCardsServiceTakeCard) > 0 {
+		fmt.Printf(" - %s", commentCardsServiceTakeCard)
+	}
+	fmt.Println()
+
+	fmt.Printf("CardsService.UpdateCard")
+	commentCardsServiceUpdateCard := `UpdateCard updates the title and body of the card.`
+	if len(commentCardsServiceUpdateCard) > 0 {
+		fmt.Printf(" - %s", commentCardsServiceUpdateCard)
 	}
 	fmt.Println()
 
@@ -376,6 +713,13 @@ func printList() {
 	}
 	fmt.Println()
 
+	fmt.Printf("CommentsService.DeleteComment")
+	commentCommentsServiceDeleteComment := `DeleteComment deletes a Comment.`
+	if len(commentCommentsServiceDeleteComment) > 0 {
+		fmt.Printf(" - %s", commentCommentsServiceDeleteComment)
+	}
+	fmt.Println()
+
 }
 
 func printTemplates() {
@@ -384,8 +728,24 @@ func printTemplates() {
 	printArgslistCreateCardRequest()
 	fmt.Println()
 
+	fmt.Printf("pace CardsService.DeleteCard ")
+	printArgslistDeleteCardRequest()
+	fmt.Println()
+
 	fmt.Printf("pace CardsService.GetCard ")
 	printArgslistGetCardRequest()
+	fmt.Println()
+
+	fmt.Printf("pace CardsService.PutBackCard ")
+	printArgslistPutBackCardRequest()
+	fmt.Println()
+
+	fmt.Printf("pace CardsService.TakeCard ")
+	printArgslistTakeCardRequest()
+	fmt.Println()
+
+	fmt.Printf("pace CardsService.UpdateCard ")
+	printArgslistUpdateCardRequest()
 	fmt.Println()
 
 	fmt.Printf("pace CardsService.UpdateCardStatus ")
@@ -396,6 +756,10 @@ func printTemplates() {
 	printArgslistAddCommentRequest()
 	fmt.Println()
 
+	fmt.Printf("pace CommentsService.DeleteComment ")
+	printArgslistDeleteCommentRequest()
+	fmt.Println()
+
 }
 
 func addFlagsForAddCommentRequest(flags *flag.FlagSet, prefix string, v *pace.AddCommentRequest) {
@@ -403,7 +767,7 @@ func addFlagsForAddCommentRequest(flags *flag.FlagSet, prefix string, v *pace.Ad
 	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
 
 	flags.StringVar(&v.TargetKind, prefix+"targetKind", "", `TargetKind is the kind of item this comment is for.
-Can be &#34;card&#34;, &#34;message&#34;, &#34;showcase&#34;.`)
+Can be &#34;card&#34;, &#34;message&#34;, or &#34;showcase&#34;.`)
 
 	flags.StringVar(&v.TargetID, prefix+"targetID", "", `TargetID is the ID of the target.`)
 
@@ -666,7 +1030,7 @@ func addFlagsForCreateCardRequest(flags *flag.FlagSet, prefix string, v *pace.Cr
 
 	flags.StringVar(&v.Title, prefix+"title", "", `Title is the title of the card.`)
 
-	flags.StringVar(&v.ParentTargetKind, prefix+"parentTargetKind", "", `ParentTargetKind is the kind of target to relate this card to (e.g. card or message)`)
+	flags.StringVar(&v.ParentTargetKind, prefix+"parentTargetKind", "", `ParentTargetKind is the kind of target to relate this card to (e.g. &#34;card&#34;, &#34;message&#34;, or &#34;showcase&#34;)`)
 
 	flags.StringVar(&v.ParentTargetID, prefix+"parentTargetID", "", `ParentTargetID is the ID of the item to relate this new card to.`)
 
@@ -720,6 +1084,52 @@ func printArgslistCreateCardResponse() {
 
 }
 
+func addFlagsForDeleteCardRequest(flags *flag.FlagSet, prefix string, v *pace.DeleteCardRequest) {
+
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of your org.`)
+
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to delete.`)
+
+}
+
+func printDeleteCardRequest(v *pace.DeleteCardRequest) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistDeleteCardRequest() {
+
+	fmt.Print("-orgID= ")
+
+	fmt.Print("-cardID= ")
+
+}
+
+func addFlagsForDeleteCardResponse(flags *flag.FlagSet, prefix string, v *pace.DeleteCardResponse) {
+
+	// skipping Error field (handled by Go client)
+
+}
+
+func printDeleteCardResponse(v *pace.DeleteCardResponse) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistDeleteCardResponse() {
+
+	fmt.Print("-error= ")
+
+}
+
 func addFlagsForGetCardRequest(flags *flag.FlagSet, prefix string, v *pace.GetCardRequest) {
 
 	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
@@ -763,6 +1173,164 @@ func printGetCardResponse(v *pace.GetCardResponse) {
 }
 
 func printArgslistGetCardResponse() {
+
+	fmt.Print("-card= ")
+
+	fmt.Print("-error= ")
+
+}
+
+func addFlagsForPutBackCardRequest(flags *flag.FlagSet, prefix string, v *pace.PutBackCardRequest) {
+
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of your org.`)
+
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to unassign yourself from.`)
+
+}
+
+func printPutBackCardRequest(v *pace.PutBackCardRequest) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistPutBackCardRequest() {
+
+	fmt.Print("-orgID= ")
+
+	fmt.Print("-cardID= ")
+
+}
+
+func addFlagsForPutBackCardResponse(flags *flag.FlagSet, prefix string, v *pace.PutBackCardResponse) {
+
+	addFlagsForCard(flags, "card.", &v.Card)
+
+	// skipping Error field (handled by Go client)
+
+}
+
+func printPutBackCardResponse(v *pace.PutBackCardResponse) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistPutBackCardResponse() {
+
+	fmt.Print("-card= ")
+
+	fmt.Print("-error= ")
+
+}
+
+func addFlagsForTakeCardRequest(flags *flag.FlagSet, prefix string, v *pace.TakeCardRequest) {
+
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of your org.`)
+
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to assign yourself to.`)
+
+}
+
+func printTakeCardRequest(v *pace.TakeCardRequest) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistTakeCardRequest() {
+
+	fmt.Print("-orgID= ")
+
+	fmt.Print("-cardID= ")
+
+}
+
+func addFlagsForTakeCardResponse(flags *flag.FlagSet, prefix string, v *pace.TakeCardResponse) {
+
+	addFlagsForCard(flags, "card.", &v.Card)
+
+	// skipping Error field (handled by Go client)
+
+}
+
+func printTakeCardResponse(v *pace.TakeCardResponse) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistTakeCardResponse() {
+
+	fmt.Print("-card= ")
+
+	fmt.Print("-error= ")
+
+}
+
+func addFlagsForUpdateCardRequest(flags *flag.FlagSet, prefix string, v *pace.UpdateCardRequest) {
+
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
+
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to update.`)
+
+	flags.StringVar(&v.Title, prefix+"title", "", `Title is the new title for the card.`)
+
+	flags.StringVar(&v.Body, prefix+"body", "", `Body is the new markdown body for the card.`)
+
+}
+
+func printUpdateCardRequest(v *pace.UpdateCardRequest) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistUpdateCardRequest() {
+
+	fmt.Print("-orgID= ")
+
+	fmt.Print("-cardID= ")
+
+	fmt.Print("-title= ")
+
+	fmt.Print("-body= ")
+
+}
+
+func addFlagsForUpdateCardResponse(flags *flag.FlagSet, prefix string, v *pace.UpdateCardResponse) {
+
+	addFlagsForCard(flags, "card.", &v.Card)
+
+	// skipping Error field (handled by Go client)
+
+}
+
+func printUpdateCardResponse(v *pace.UpdateCardResponse) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistUpdateCardResponse() {
 
 	fmt.Print("-card= ")
 
@@ -820,6 +1388,63 @@ func printUpdateCardStatusResponse(v *pace.UpdateCardStatusResponse) {
 func printArgslistUpdateCardStatusResponse() {
 
 	fmt.Print("-card= ")
+
+	fmt.Print("-error= ")
+
+}
+
+func addFlagsForDeleteCommentRequest(flags *flag.FlagSet, prefix string, v *pace.DeleteCommentRequest) {
+
+	flags.StringVar(&v.ID, prefix+"id", "", `ID is the ID of the comment to delete.`)
+
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of your org.`)
+
+	flags.StringVar(&v.TargetKind, prefix+"targetKind", "", `TargetKind is the kind of target this Comment was made on.
+Can be &#34;card&#34;, &#34;message&#34;, or &#34;showcase&#34;.
+Used to help identify the Comment.`)
+
+	flags.StringVar(&v.TargetID, prefix+"targetID", "", `TargetID is the ID of the target.
+Used to help identify the Comment.`)
+
+}
+
+func printDeleteCommentRequest(v *pace.DeleteCommentRequest) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistDeleteCommentRequest() {
+
+	fmt.Print("-id= ")
+
+	fmt.Print("-orgID= ")
+
+	fmt.Print("-targetKind= ")
+
+	fmt.Print("-targetID= ")
+
+}
+
+func addFlagsForDeleteCommentResponse(flags *flag.FlagSet, prefix string, v *pace.DeleteCommentResponse) {
+
+	// skipping Error field (handled by Go client)
+
+}
+
+func printDeleteCommentResponse(v *pace.DeleteCommentResponse) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistDeleteCommentResponse() {
 
 	fmt.Print("-error= ")
 

@@ -47,7 +47,7 @@ func New(apiKey, secret string) *Client {
 	return c
 }
 
-// CardsService is used to work with cards.
+// CardsService allows you to programmatically manage cards in Pace.
 type CardsService struct {
 	client *Client
 }
@@ -116,6 +116,63 @@ func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*Cr
 	return &response.CreateCardResponse, nil
 }
 
+// DeleteCard deletes a card.
+func (s *CardsService) DeleteCard(ctx context.Context, r DeleteCardRequest) (*DeleteCardResponse, error) {
+	requestBodyBytes, err := json.Marshal(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.DeleteCard: marshal DeleteCardRequest")
+	}
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.DeleteCard: generate signature DeleteCardRequest")
+	}
+
+	url := s.client.RemoteHost + "/api/CardsService.DeleteCard"
+	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.DeleteCard: NewRequest")
+	}
+	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip")
+	req = req.WithContext(ctx)
+	resp, err := s.client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.DeleteCard")
+	}
+	defer resp.Body.Close()
+	var response struct {
+		DeleteCardResponse
+		Error string
+	}
+	var bodyReader io.Reader = resp.Body
+	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
+		decodedBody, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "CardsService.DeleteCard: new gzip reader")
+		}
+		defer decodedBody.Close()
+		bodyReader = decodedBody
+	}
+	respBodyBytes, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.DeleteCard: read response body")
+	}
+	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+		if resp.StatusCode != http.StatusOK {
+			return nil, errors.Errorf("CardsService.DeleteCard: (%d) %v", resp.StatusCode, string(respBodyBytes))
+		}
+		return nil, err
+	}
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.DeleteCardResponse, nil
+}
+
 // GetCard gets a card.
 func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardResponse, error) {
 	requestBodyBytes, err := json.Marshal(r)
@@ -171,6 +228,177 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 		return nil, errors.New(response.Error)
 	}
 	return &response.GetCardResponse, nil
+}
+
+// PutBackCard removes a user from the list of responsbile users. Undoes TakeCard.
+func (s *CardsService) PutBackCard(ctx context.Context, r PutBackCardRequest) (*PutBackCardResponse, error) {
+	requestBodyBytes, err := json.Marshal(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.PutBackCard: marshal PutBackCardRequest")
+	}
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.PutBackCard: generate signature PutBackCardRequest")
+	}
+
+	url := s.client.RemoteHost + "/api/CardsService.PutBackCard"
+	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.PutBackCard: NewRequest")
+	}
+	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip")
+	req = req.WithContext(ctx)
+	resp, err := s.client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.PutBackCard")
+	}
+	defer resp.Body.Close()
+	var response struct {
+		PutBackCardResponse
+		Error string
+	}
+	var bodyReader io.Reader = resp.Body
+	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
+		decodedBody, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "CardsService.PutBackCard: new gzip reader")
+		}
+		defer decodedBody.Close()
+		bodyReader = decodedBody
+	}
+	respBodyBytes, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.PutBackCard: read response body")
+	}
+	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+		if resp.StatusCode != http.StatusOK {
+			return nil, errors.Errorf("CardsService.PutBackCard: (%d) %v", resp.StatusCode, string(respBodyBytes))
+		}
+		return nil, err
+	}
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.PutBackCardResponse, nil
+}
+
+// TakeCard takes responsibility for a card. Can be undone with PutBackCard.
+func (s *CardsService) TakeCard(ctx context.Context, r TakeCardRequest) (*TakeCardResponse, error) {
+	requestBodyBytes, err := json.Marshal(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.TakeCard: marshal TakeCardRequest")
+	}
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.TakeCard: generate signature TakeCardRequest")
+	}
+
+	url := s.client.RemoteHost + "/api/CardsService.TakeCard"
+	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.TakeCard: NewRequest")
+	}
+	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip")
+	req = req.WithContext(ctx)
+	resp, err := s.client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.TakeCard")
+	}
+	defer resp.Body.Close()
+	var response struct {
+		TakeCardResponse
+		Error string
+	}
+	var bodyReader io.Reader = resp.Body
+	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
+		decodedBody, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "CardsService.TakeCard: new gzip reader")
+		}
+		defer decodedBody.Close()
+		bodyReader = decodedBody
+	}
+	respBodyBytes, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.TakeCard: read response body")
+	}
+	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+		if resp.StatusCode != http.StatusOK {
+			return nil, errors.Errorf("CardsService.TakeCard: (%d) %v", resp.StatusCode, string(respBodyBytes))
+		}
+		return nil, err
+	}
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.TakeCardResponse, nil
+}
+
+// UpdateCard updates the title and body of the card.
+func (s *CardsService) UpdateCard(ctx context.Context, r UpdateCardRequest) (*UpdateCardResponse, error) {
+	requestBodyBytes, err := json.Marshal(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCard: marshal UpdateCardRequest")
+	}
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCard: generate signature UpdateCardRequest")
+	}
+
+	url := s.client.RemoteHost + "/api/CardsService.UpdateCard"
+	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCard: NewRequest")
+	}
+	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip")
+	req = req.WithContext(ctx)
+	resp, err := s.client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCard")
+	}
+	defer resp.Body.Close()
+	var response struct {
+		UpdateCardResponse
+		Error string
+	}
+	var bodyReader io.Reader = resp.Body
+	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
+		decodedBody, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "CardsService.UpdateCard: new gzip reader")
+		}
+		defer decodedBody.Close()
+		bodyReader = decodedBody
+	}
+	respBodyBytes, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCard: read response body")
+	}
+	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+		if resp.StatusCode != http.StatusOK {
+			return nil, errors.Errorf("CardsService.UpdateCard: (%d) %v", resp.StatusCode, string(respBodyBytes))
+		}
+		return nil, err
+	}
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.UpdateCardResponse, nil
 }
 
 // UpdateCardStatus updates a card&#39;s status.
@@ -230,7 +458,7 @@ func (s *CardsService) UpdateCardStatus(ctx context.Context, r UpdateCardStatusR
 	return &response.UpdateCardStatusResponse, nil
 }
 
-// CommentsService allows you to create comments in Pace.
+// CommentsService allows you to programmatically manage comments in Pace.
 type CommentsService struct {
 	client *Client
 }
@@ -299,13 +527,70 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 	return &response.AddCommentResponse, nil
 }
 
+// DeleteComment deletes a Comment.
+func (s *CommentsService) DeleteComment(ctx context.Context, r DeleteCommentRequest) (*DeleteCommentResponse, error) {
+	requestBodyBytes, err := json.Marshal(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "CommentsService.DeleteComment: marshal DeleteCommentRequest")
+	}
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CommentsService.DeleteComment: generate signature DeleteCommentRequest")
+	}
+
+	url := s.client.RemoteHost + "/api/CommentsService.DeleteComment"
+	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
+	if err != nil {
+		return nil, errors.Wrap(err, "CommentsService.DeleteComment: NewRequest")
+	}
+	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip")
+	req = req.WithContext(ctx)
+	resp, err := s.client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "CommentsService.DeleteComment")
+	}
+	defer resp.Body.Close()
+	var response struct {
+		DeleteCommentResponse
+		Error string
+	}
+	var bodyReader io.Reader = resp.Body
+	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
+		decodedBody, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "CommentsService.DeleteComment: new gzip reader")
+		}
+		defer decodedBody.Close()
+		bodyReader = decodedBody
+	}
+	respBodyBytes, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, errors.Wrap(err, "CommentsService.DeleteComment: read response body")
+	}
+	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+		if resp.StatusCode != http.StatusOK {
+			return nil, errors.Errorf("CommentsService.DeleteComment: (%d) %v", resp.StatusCode, string(respBodyBytes))
+		}
+		return nil, err
+	}
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.DeleteCommentResponse, nil
+}
+
 // AddCommentRequest is the input object for AddComment.
 type AddCommentRequest struct {
 
 	// OrgID is the ID of the org.
 	OrgID string `json:"orgID"`
 
-	// TargetKind is the kind of item this comment is for. Can be &#34;card&#34;, &#34;message&#34;,
+	// TargetKind is the kind of item this comment is for. Can be &#34;card&#34;, &#34;message&#34;, or
 	// &#34;showcase&#34;.
 	TargetKind string `json:"targetKind"`
 
@@ -455,8 +740,8 @@ type CreateCardRequest struct {
 	// Title is the title of the card.
 	Title string `json:"title"`
 
-	// ParentTargetKind is the kind of target to relate this card to (e.g. card or
-	// message)
+	// ParentTargetKind is the kind of target to relate this card to (e.g. &#34;card&#34;,
+	// &#34;message&#34;, or &#34;showcase&#34;)
 	ParentTargetKind string `json:"parentTargetKind"`
 
 	// ParentTargetID is the ID of the item to relate this new card to.
@@ -468,6 +753,20 @@ type CreateCardResponse struct {
 
 	// Card is the card that was just created.
 	Card Card `json:"card"`
+}
+
+// DeleteCardRequest is the input object for DeleteCard.
+type DeleteCardRequest struct {
+
+	// OrgID is the ID of your org.
+	OrgID string `json:"orgID"`
+
+	// CardID is the ID of the card to delete.
+	CardID string `json:"cardID"`
+}
+
+// DeleteCardResponse is the output object for DeleteCard.
+type DeleteCardResponse struct {
 }
 
 // GetCardRequest is the input object for GetCard.
@@ -484,6 +783,63 @@ type GetCardRequest struct {
 type GetCardResponse struct {
 
 	// Card is the card.
+	Card Card `json:"card"`
+}
+
+// PutBackCardRequest is the input object for PutBackCard.
+type PutBackCardRequest struct {
+
+	// OrgID is the ID of your org.
+	OrgID string `json:"orgID"`
+
+	// CardID is the ID of the card to unassign yourself from.
+	CardID string `json:"cardID"`
+}
+
+// PutBackCardResponse is the output object for PutBackCard.
+type PutBackCardResponse struct {
+
+	// Card is the newly updated Card.
+	Card Card `json:"card"`
+}
+
+// TakeCardRequest is the input object for TakeCard.
+type TakeCardRequest struct {
+
+	// OrgID is the ID of your org.
+	OrgID string `json:"orgID"`
+
+	// CardID is the ID of the card to assign yourself to.
+	CardID string `json:"cardID"`
+}
+
+// TakeCardResponse is the output object for TakeCard.
+type TakeCardResponse struct {
+
+	// Card is the newly updated Card.
+	Card Card `json:"card"`
+}
+
+// UpdateCardRequest is the input object for UpdateCard.
+type UpdateCardRequest struct {
+
+	// OrgID is the ID of the org.
+	OrgID string `json:"orgID"`
+
+	// CardID is the ID of the card to update.
+	CardID string `json:"cardID"`
+
+	// Title is the new title for the card.
+	Title string `json:"title"`
+
+	// Body is the new markdown body for the card.
+	Body string `json:"body"`
+}
+
+// UpdateCardResponse is the output object for UpdateCard.
+type UpdateCardResponse struct {
+
+	// Card is the recently updated Card.
 	Card Card `json:"card"`
 }
 
@@ -506,6 +862,27 @@ type UpdateCardStatusResponse struct {
 
 	// Card is the card that was updated.
 	Card Card `json:"card"`
+}
+
+// DeleteCommentRequest is the input object for DeleteComment.
+type DeleteCommentRequest struct {
+
+	// ID is the ID of the comment to delete.
+	ID string `json:"id"`
+
+	// OrgID is the ID of your org.
+	OrgID string `json:"orgID"`
+
+	// TargetKind is the kind of target this Comment was made on. Can be &#34;card&#34;,
+	// &#34;message&#34;, or &#34;showcase&#34;. Used to help identify the Comment.
+	TargetKind string `json:"targetKind"`
+
+	// TargetID is the ID of the target. Used to help identify the Comment.
+	TargetID string `json:"targetID"`
+}
+
+// DeleteCommentResponse is the output object for DeleteComment.
+type DeleteCommentResponse struct {
 }
 
 func generateSignature(message, secret []byte) (string, error) {

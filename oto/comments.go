@@ -1,9 +1,11 @@
 package public
 
-// CommentsService allows you to create comments in Pace.
+// CommentsService allows you to programmatically manage comments in Pace.
 type CommentsService interface {
 	// AddComment adds a comment.
 	AddComment(AddCommentRequest) AddCommentResponse
+	// DeleteComment deletes a Comment.
+	DeleteComment(DeleteCommentRequest) DeleteCommentResponse
 }
 
 // AddCommentRequest is the input object for AddComment.
@@ -12,7 +14,7 @@ type AddCommentRequest struct {
 	// example: "your-org-id"
 	OrgID string
 	// TargetKind is the kind of item this comment is for.
-	// Can be "card", "message", "showcase".
+	// Can be "card", "message", or "showcase".
 	// example: "card"
 	TargetKind string
 	// TargetID is the ID of the target.
@@ -47,3 +49,25 @@ type Comment struct {
 	// Author is the person who posted this comment.
 	Author Person
 }
+
+// DeleteCommentRequest is the input object for DeleteComment.
+type DeleteCommentRequest struct {
+	// ID is the ID of the comment to delete.
+	// example: "5f19afce3979fb39"
+	ID string
+	// OrgID is the ID of your org.
+	// example: "your-org-id"
+	OrgID string
+	// TargetKind is the kind of target this Comment was made on.
+	// Can be "card", "message", or "showcase".
+	// Used to help identify the Comment.
+	// example: "card"
+	TargetKind string
+	// TargetID is the ID of the target.
+	// Used to help identify the Comment.
+	// example: "123"
+	TargetID string
+}
+
+// DeleteCommentResponse is the output object for DeleteComment.
+type DeleteCommentResponse struct{}

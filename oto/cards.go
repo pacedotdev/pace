@@ -1,13 +1,23 @@
 package public
 
-// CardsService is used to work with cards.
+// CardsService allows you to programmatically manage cards in Pace.
 type CardsService interface {
 	// GetCard gets a card.
 	GetCard(GetCardRequest) GetCardResponse
 	// CreateCard creates a new Card.
 	CreateCard(CreateCardRequest) CreateCardResponse
+	// UpdateCard updates the title and body of the card.
+	UpdateCard(UpdateCardRequest) UpdateCardResponse
 	// UpdateCardStatus updates a card's status.
 	UpdateCardStatus(UpdateCardStatusRequest) UpdateCardStatusResponse
+	// TakeCard takes responsibility for a card.
+	// Can be undone with PutBackCard.
+	TakeCard(TakeCardRequest) TakeCardResponse
+	// PutBackCard removes a user from the list of responsbile users.
+	// Undoes TakeCard.
+	PutBackCard(PutBackCardRequest) PutBackCardResponse
+	// DeleteCard deletes a card.
+	DeleteCard(DeleteCardRequest) DeleteCardResponse
 }
 
 // GetCardRequest is the input object for GetCard.
@@ -37,7 +47,7 @@ type CreateCardRequest struct {
 	// Title is the title of the card.
 	// example: "This is my new card"
 	Title string
-	// ParentTargetKind is the kind of target to relate this card to (e.g. card or message)
+	// ParentTargetKind is the kind of target to relate this card to (e.g. "card", "message", or "showcase")
 	// example: "card"
 	ParentTargetKind string
 	// ParentTargetID is the ID of the item to relate this new card to.
@@ -116,3 +126,70 @@ type UpdateCardStatusResponse struct {
 	// Card is the card that was updated.
 	Card Card
 }
+
+// UpdateCardRequest is the input object for UpdateCard.
+type UpdateCardRequest struct {
+	// OrgID is the ID of the org.
+	// example: "your-org-id"
+	OrgID string
+	// CardID is the ID of the card to update.
+	// example: "123"
+	CardID string
+	// Title is the new title for the card.
+	// example: "New title"
+	Title string
+	// Body is the new markdown body for the card.
+	// example: "I have been **updated**"
+	Body string
+}
+
+// UpdateCardResponse is the output object for UpdateCard.
+type UpdateCardResponse struct {
+	// Card is the recently updated Card.
+	Card Card
+}
+
+// TakeCardRequest is the input object for TakeCard.
+type TakeCardRequest struct {
+	// OrgID is the ID of your org.
+	// example: "your-org-id"
+	OrgID string
+	// CardID is the ID of the card to assign yourself to.
+	// example: "123"
+	CardID string
+}
+
+// TakeCardResponse is the output object for TakeCard.
+type TakeCardResponse struct {
+	// Card is the newly updated Card.
+	Card Card
+}
+
+// PutBackCardRequest is the input object for PutBackCard.
+type PutBackCardRequest struct {
+	// OrgID is the ID of your org.
+	// example: "your-org-id"
+	OrgID string
+	// CardID is the ID of the card to unassign yourself from.
+	// example: "123"
+	CardID string
+}
+
+// PutBackCardResponse is the output object for PutBackCard.
+type PutBackCardResponse struct {
+	// Card is the newly updated Card.
+	Card Card
+}
+
+// DeleteCardRequest is the input object for DeleteCard.
+type DeleteCardRequest struct {
+	// OrgID is the ID of your org.
+	// example: "your-org-id"
+	OrgID string
+	// CardID is the ID of the card to delete.
+	// example: "123"
+	CardID string
+}
+
+// DeleteCardResponse is the output object for DeleteCard.
+type DeleteCardResponse struct{}
