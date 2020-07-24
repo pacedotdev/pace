@@ -4,7 +4,8 @@
 
 If you're new here, we recommend you take a few minutes to understand how Pace for Developers works:
 
-* [Read about API keys in Pace](https://pace.dev/docs/api/auth)
+* [Read our introduction to Pace for Developers](https://pace.dev/docs/api/intro)
+* [Learn about API keys in Pace](https://pace.dev/docs/api/auth)
 
 ### On this page
 
@@ -94,7 +95,7 @@ You can make plain old HTTP calls with JSON payloads to interact with Pace.
 * Make calls directly to `https://pace.dev/api`
 * Set the `Content-Type` header to `application/json`
 * Use `POST` method
-* Set `X-API-KEY` header to your API key ([Read more about API keys in Pace](https://pace.dev/docs/api/auth))
+* Set `X-API-KEY` and `X-API-SIGNATURE` headers ([Read more about API keys in Pace](https://pace.dev/docs/api/auth))
 
 ```
 POST https://pace.dev/api/CardsService.GetCard
