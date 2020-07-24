@@ -38,7 +38,7 @@ type CreateCardRequest struct {
 	// example: "This is my new card"
 	Title string
 	// ParentTargetKind is the kind of target to relate this card to (e.g. card or message)
-	// example: "cards"
+	// example: "card"
 	ParentTargetKind string
 	// ParentTargetID is the ID of the item to relate this new card to.
 	// example: "123"
