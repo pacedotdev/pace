@@ -8,7 +8,7 @@ import (
 	"context"
 	"crypto/hmac"
 	"crypto/sha256"
-	"encoding/hex"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -65,7 +65,7 @@ func (s *CardsService) CreateCard(ctx context.Context, r CreateCardRequest) (*Cr
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.CreateCard: marshal CreateCardRequest")
 	}
-	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.CreateCard: generate signature CreateCardRequest")
 	}
@@ -122,7 +122,7 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.GetCard: marshal GetCardRequest")
 	}
-	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.GetCard: generate signature GetCardRequest")
 	}
@@ -179,7 +179,7 @@ func (s *CardsService) UpdateCardStatus(ctx context.Context, r UpdateCardStatusR
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.UpdateCardStatus: marshal UpdateCardStatusRequest")
 	}
-	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
 	if err != nil {
 		return nil, errors.Wrap(err, "CardsService.UpdateCardStatus: generate signature UpdateCardStatusRequest")
 	}
@@ -248,7 +248,7 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 	if err != nil {
 		return nil, errors.Wrap(err, "CommentsService.AddComment: marshal AddCommentRequest")
 	}
-	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
 	if err != nil {
 		return nil, errors.Wrap(err, "CommentsService.AddComment: generate signature AddCommentRequest")
 	}
@@ -508,11 +508,11 @@ type UpdateCardStatusResponse struct {
 	Card Card `json:"card"`
 }
 
-func genMAC(message, secret []byte) (string, error) {
+func generateSignature(message, secret []byte) (string, error) {
 	mac := hmac.New(sha256.New, secret)
 	if _, err := mac.Write(message); err != nil {
 		return "", err
 	}
-	sig := hex.EncodeToString(mac.Sum(nil))
+	sig := base64.StdEncoding.EncodeToString(mac.Sum(nil))
 	return sig, nil
 }

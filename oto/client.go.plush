@@ -8,7 +8,7 @@ import (
 	"context"
 	"crypto/hmac"
 	"crypto/sha256"
-	"encoding/hex"
+	"encoding/base64"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -67,7 +67,7 @@ func New<%= service.Name %>(client *Client) *<%= service.Name %> {
 	if err != nil {
 		return nil, errors.Wrap(err, "<%= service.Name %>.<%= method.Name %>: marshal <%= method.InputObject.TypeName %>")
 	}
-	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	signature, err := generateSignature(requestBodyBytes, s.client.secret)
 	if err != nil {
 		return nil, errors.Wrap(err, "<%= service.Name %>.<%= method.Name %>: generate signature <%= method.InputObject.TypeName %>")
 	}
@@ -132,12 +132,11 @@ func New<%= service.Name %>(client *Client) *<%= service.Name %> {
 	<% } %>
 <% } %>
 
-
-func genMAC(message, secret []byte) (string, error) {
+func generateSignature(message, secret []byte) (string, error) {
 	mac := hmac.New(sha256.New, secret)
 	if _, err := mac.Write(message); err != nil {
 		return "", err
 	}
-	sig := hex.EncodeToString(mac.Sum(nil))
+	sig := base64.StdEncoding.EncodeToString(mac.Sum(nil))
 	return sig, nil
 }
