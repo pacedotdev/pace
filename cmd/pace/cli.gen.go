@@ -340,6 +340,9 @@ func CardsServiceCreateCard(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
+	if globals.silent {
+		return nil
+	}
 	printCreateCardResponse(resp)
 	return nil
 }
@@ -376,6 +379,9 @@ func CardsServiceDeleteCard(ctx context.Context, args []string) error {
 	resp, err := service.DeleteCard(ctx, request)
 	if err != nil {
 		return err
+	}
+	if globals.silent {
+		return nil
 	}
 	printDeleteCardResponse(resp)
 	return nil
@@ -414,6 +420,9 @@ func CardsServiceGetCard(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
+	if globals.silent {
+		return nil
+	}
 	printGetCardResponse(resp)
 	return nil
 }
@@ -450,6 +459,9 @@ func CardsServicePutBackCard(ctx context.Context, args []string) error {
 	resp, err := service.PutBackCard(ctx, request)
 	if err != nil {
 		return err
+	}
+	if globals.silent {
+		return nil
 	}
 	printPutBackCardResponse(resp)
 	return nil
@@ -488,6 +500,9 @@ func CardsServiceTakeCard(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
+	if globals.silent {
+		return nil
+	}
 	printTakeCardResponse(resp)
 	return nil
 }
@@ -524,6 +539,9 @@ func CardsServiceUpdateCard(ctx context.Context, args []string) error {
 	resp, err := service.UpdateCard(ctx, request)
 	if err != nil {
 		return err
+	}
+	if globals.silent {
+		return nil
 	}
 	printUpdateCardResponse(resp)
 	return nil
@@ -562,6 +580,9 @@ func CardsServiceUpdateCardStatus(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
+	if globals.silent {
+		return nil
+	}
 	printUpdateCardStatusResponse(resp)
 	return nil
 }
@@ -599,6 +620,9 @@ func CommentsServiceAddComment(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
+	if globals.silent {
+		return nil
+	}
 	printAddCommentResponse(resp)
 	return nil
 }
@@ -635,6 +659,9 @@ func CommentsServiceDeleteComment(ctx context.Context, args []string) error {
 	resp, err := service.DeleteComment(ctx, request)
 	if err != nil {
 		return err
+	}
+	if globals.silent {
+		return nil
 	}
 	printDeleteCommentResponse(resp)
 	return nil

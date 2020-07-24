@@ -145,6 +145,9 @@ func printUsage() {
 			if err != nil {
 				return err
 			}
+			if globals.silent {
+				return nil
+			}
 			print<%= method.OutputObject.TypeName %>(resp)
 			return nil
 		}
