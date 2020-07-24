@@ -38,6 +38,9 @@ func runCommand(ctx context.Context, args []string) error {
 	case "CardsService.GetCard":
 		return CardsServiceGetCard(ctx, args)
 
+	case "CardsService.UpdateCardStatus":
+		return CardsServiceUpdateCardStatus(ctx, args)
+
 	case "CommentsService.AddComment":
 		return CommentsServiceAddComment(ctx, args)
 
@@ -60,7 +63,7 @@ func showHelp(args []string) {
 		fmt.Println()
 
 		fmt.Print("* CommentsService")
-		commentForCommentsService := ``
+		commentForCommentsService := `CommentsService allows you to create comments in Pace.`
 		if commentForCommentsService != "" {
 			fmt.Print(" - ", commentForCommentsService)
 		}
@@ -96,6 +99,13 @@ func showHelpFor(args []string, service string) {
 		}
 		fmt.Println()
 
+		fmt.Print("* CardsService.UpdateCardStatus")
+		commentForCardsServiceUpdateCardStatus := `UpdateCardStatus updates a card&#39;s status.`
+		if commentForCardsServiceUpdateCardStatus != "" {
+			fmt.Print(" - ", commentForCardsServiceUpdateCardStatus)
+		}
+		fmt.Println()
+
 	case "CardsService.CreateCard":
 		fmt.Println(`Usage for CardsService.CreateCard
 
@@ -104,16 +114,8 @@ func showHelpFor(args []string, service string) {
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		// add flags for documentation purposes
-		var (
-			apikey string
-			secret string
-			host   string
-			debug  bool
-		)
-		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
-		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
-		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
-		flags.BoolVar(&debug, "debug", false, "prints debug information")
+		globals := &globalFlags{}
+		globals.addFlags(flags)
 		var request pace.CreateCardRequest
 		addFlagsForCreateCardRequest(flags, "", &request)
 		flags.PrintDefaults()
@@ -126,18 +128,24 @@ flags:`)
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		// add flags for documentation purposes
-		var (
-			apikey string
-			secret string
-			host   string
-			debug  bool
-		)
-		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
-		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
-		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
-		flags.BoolVar(&debug, "debug", false, "prints debug information")
+		globals := &globalFlags{}
+		globals.addFlags(flags)
 		var request pace.GetCardRequest
 		addFlagsForGetCardRequest(flags, "", &request)
+		flags.PrintDefaults()
+
+	case "CardsService.UpdateCardStatus":
+		fmt.Println(`Usage for CardsService.UpdateCardStatus
+
+  pace CardsService.UpdateCardStatus [flags]
+
+flags:`)
+		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+		// add flags for documentation purposes
+		globals := &globalFlags{}
+		globals.addFlags(flags)
+		var request pace.UpdateCardStatusRequest
+		addFlagsForUpdateCardStatusRequest(flags, "", &request)
 		flags.PrintDefaults()
 
 	case "CommentsService":
@@ -158,16 +166,8 @@ flags:`)
 flags:`)
 		flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 		// add flags for documentation purposes
-		var (
-			apikey string
-			secret string
-			host   string
-			debug  bool
-		)
-		flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
-		flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
-		flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
-		flags.BoolVar(&debug, "debug", false, "prints debug information")
+		globals := &globalFlags{}
+		globals.addFlags(flags)
 		var request pace.AddCommentRequest
 		addFlagsForAddCommentRequest(flags, "", &request)
 		flags.PrintDefaults()
@@ -187,36 +187,28 @@ func printUsage() {
 
 func CardsServiceCreateCard(ctx context.Context, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	var (
-		apikey string
-		secret string
-		host   string
-		debug  bool
-	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
-	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
-	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
-	flags.BoolVar(&debug, "debug", false, "prints debug information")
+	globals := &globalFlags{}
+	globals.addFlags(flags)
 	var request pace.CreateCardRequest
 	addFlagsForCreateCardRequest(flags, "", &request)
 	if err := flags.Parse(args[2:]); err != nil {
 		return err
 	}
-	if apikey == "" {
-		apikey = os.Getenv("PACE_API_KEY")
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
 	}
-	if apikey == "" {
+	if globals.apikey == "" {
 		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
-	if secret == "" {
-		secret = os.Getenv("PACE_API_SECRET")
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
 	}
-	if secret == "" {
+	if globals.secret == "" {
 		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
 	}
-	client := pace.New(apikey, secret)
-	client.RemoteHost = host
-	if debug {
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
 		client.Debug = func(s string) {
 			fmt.Println(s)
 		}
@@ -232,36 +224,28 @@ func CardsServiceCreateCard(ctx context.Context, args []string) error {
 
 func CardsServiceGetCard(ctx context.Context, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	var (
-		apikey string
-		secret string
-		host   string
-		debug  bool
-	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
-	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
-	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
-	flags.BoolVar(&debug, "debug", false, "prints debug information")
+	globals := &globalFlags{}
+	globals.addFlags(flags)
 	var request pace.GetCardRequest
 	addFlagsForGetCardRequest(flags, "", &request)
 	if err := flags.Parse(args[2:]); err != nil {
 		return err
 	}
-	if apikey == "" {
-		apikey = os.Getenv("PACE_API_KEY")
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
 	}
-	if apikey == "" {
+	if globals.apikey == "" {
 		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
-	if secret == "" {
-		secret = os.Getenv("PACE_API_SECRET")
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
 	}
-	if secret == "" {
+	if globals.secret == "" {
 		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
 	}
-	client := pace.New(apikey, secret)
-	client.RemoteHost = host
-	if debug {
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
 		client.Debug = func(s string) {
 			fmt.Println(s)
 		}
@@ -275,38 +259,67 @@ func CardsServiceGetCard(ctx context.Context, args []string) error {
 	return nil
 }
 
+func CardsServiceUpdateCardStatus(ctx context.Context, args []string) error {
+	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	globals := &globalFlags{}
+	globals.addFlags(flags)
+	var request pace.UpdateCardStatusRequest
+	addFlagsForUpdateCardStatusRequest(flags, "", &request)
+	if err := flags.Parse(args[2:]); err != nil {
+		return err
+	}
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
+	}
+	if globals.apikey == "" {
+		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
+	}
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
+	}
+	if globals.secret == "" {
+		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
+	}
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
+		client.Debug = func(s string) {
+			fmt.Println(s)
+		}
+	}
+	service := pace.NewCardsService(client)
+	resp, err := service.UpdateCardStatus(ctx, request)
+	if err != nil {
+		return err
+	}
+	printUpdateCardStatusResponse(resp)
+	return nil
+}
+
 func CommentsServiceAddComment(ctx context.Context, args []string) error {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	var (
-		apikey string
-		secret string
-		host   string
-		debug  bool
-	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
-	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
-	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
-	flags.BoolVar(&debug, "debug", false, "prints debug information")
+	globals := &globalFlags{}
+	globals.addFlags(flags)
 	var request pace.AddCommentRequest
 	addFlagsForAddCommentRequest(flags, "", &request)
 	if err := flags.Parse(args[2:]); err != nil {
 		return err
 	}
-	if apikey == "" {
-		apikey = os.Getenv("PACE_API_KEY")
+	if globals.apikey == "" {
+		globals.apikey = os.Getenv("PACE_API_KEY")
 	}
-	if apikey == "" {
+	if globals.apikey == "" {
 		return errors.New("missing api key (use -apikey flag or PACE_API_KEY env var)")
 	}
-	if secret == "" {
-		secret = os.Getenv("PACE_API_SECRET")
+	if globals.secret == "" {
+		globals.secret = os.Getenv("PACE_API_SECRET")
 	}
-	if secret == "" {
+	if globals.secret == "" {
 		return errors.New("missing api secret (use -secret flag or PACE_API_SECRET env var)")
 	}
-	client := pace.New(apikey, secret)
-	client.RemoteHost = host
-	if debug {
+	client := pace.New(globals.apikey, globals.secret)
+	client.RemoteHost = globals.host
+	if globals.debug {
 		client.Debug = func(s string) {
 			fmt.Println(s)
 		}
@@ -328,16 +341,8 @@ func printFlagDefaults(args []string) {
 	fmt.Println()
 	fmt.Println("Flags:")
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	var (
-		apikey string
-		host   string
-		debug  bool
-		secret string
-	)
-	flags.StringVar(&apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
-	flags.StringVar(&host, "host", "https://pace.dev", "Pace remote host")
-	flags.StringVar(&secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
-	flags.BoolVar(&debug, "debug", false, "prints debug information")
+	globals := &globalFlags{}
+	globals.addFlags(flags)
 	flags.PrintDefaults()
 }
 
@@ -354,6 +359,13 @@ func printList() {
 	commentCardsServiceGetCard := `GetCard gets a card.`
 	if len(commentCardsServiceGetCard) > 0 {
 		fmt.Printf(" - %s", commentCardsServiceGetCard)
+	}
+	fmt.Println()
+
+	fmt.Printf("CardsService.UpdateCardStatus")
+	commentCardsServiceUpdateCardStatus := `UpdateCardStatus updates a card&#39;s status.`
+	if len(commentCardsServiceUpdateCardStatus) > 0 {
+		fmt.Printf(" - %s", commentCardsServiceUpdateCardStatus)
 	}
 	fmt.Println()
 
@@ -376,6 +388,10 @@ func printTemplates() {
 	printArgslistGetCardRequest()
 	fmt.Println()
 
+	fmt.Printf("pace CardsService.UpdateCardStatus ")
+	printArgslistUpdateCardStatusRequest()
+	fmt.Println()
+
 	fmt.Printf("pace CommentsService.AddComment ")
 	printArgslistAddCommentRequest()
 	fmt.Println()
@@ -384,13 +400,14 @@ func printTemplates() {
 
 func addFlagsForAddCommentRequest(flags *flag.FlagSet, prefix string, v *pace.AddCommentRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"OrgID", "", ``)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
 
-	flags.StringVar(&v.TargetKind, prefix+"TargetKind", "", ``)
+	flags.StringVar(&v.TargetKind, prefix+"targetKind", "", `TargetKind is the kind of item this comment is for.
+Can be &#34;card&#34;, &#34;message&#34;, &#34;showcase&#34;.`)
 
-	flags.StringVar(&v.TargetID, prefix+"TargetID", "", ``)
+	flags.StringVar(&v.TargetID, prefix+"targetID", "", `TargetID is the ID of the target.`)
 
-	flags.StringVar(&v.Body, prefix+"Body", "", ``)
+	flags.StringVar(&v.Body, prefix+"body", "", `Body is the markdown body of the comment.`)
 
 }
 
@@ -405,25 +422,25 @@ func printAddCommentRequest(v *pace.AddCommentRequest) {
 
 func printArgslistAddCommentRequest() {
 
-	fmt.Print("-OrgID= ")
+	fmt.Print("-orgID= ")
 
-	fmt.Print("-TargetKind= ")
+	fmt.Print("-targetKind= ")
 
-	fmt.Print("-TargetID= ")
+	fmt.Print("-targetID= ")
 
-	fmt.Print("-Body= ")
+	fmt.Print("-body= ")
 
 }
 
 func addFlagsForPerson(flags *flag.FlagSet, prefix string, v *pace.Person) {
 
-	flags.StringVar(&v.ID, prefix+"ID", "", ``)
+	flags.StringVar(&v.ID, prefix+"id", "", `ID is the ID of the Person.`)
 
-	flags.StringVar(&v.Username, prefix+"Username", "", ``)
+	flags.StringVar(&v.Username, prefix+"username", "", `Username is the Person&#39;s username within the org.`)
 
-	flags.StringVar(&v.Name, prefix+"Name", "", ``)
+	flags.StringVar(&v.Name, prefix+"name", "", `Name is the name of the Person.`)
 
-	flags.StringVar(&v.PhotoURL, prefix+"PhotoURL", "", ``)
+	flags.StringVar(&v.PhotoURL, prefix+"photoURL", "", `PhotoURL is the URL of a picture of this Person.`)
 
 }
 
@@ -438,87 +455,29 @@ func printPerson(v *pace.Person) {
 
 func printArgslistPerson() {
 
-	fmt.Print("-ID= ")
+	fmt.Print("-id= ")
 
-	fmt.Print("-Username= ")
+	fmt.Print("-username= ")
 
-	fmt.Print("-Name= ")
+	fmt.Print("-name= ")
 
-	fmt.Print("-PhotoURL= ")
-
-}
-
-func addFlagsForFile(flags *flag.FlagSet, prefix string, v *pace.File) {
-
-	flags.StringVar(&v.ID, prefix+"ID", "", `ID is the identifier for this file.`)
-
-	flags.StringVar(&v.CTime, prefix+"CTime", "", `CTime is the time the file was uploaded.`)
-
-	flags.StringVar(&v.Name, prefix+"Name", "", `Name is the name of the file.`)
-
-	flags.StringVar(&v.Path, prefix+"Path", "", `Path is the path of the file.`)
-
-	flags.StringVar(&v.ContentType, prefix+"ContentType", "", `ContentType is the type of the file.`)
-
-	flags.StringVar(&v.FileType, prefix+"FileType", "", `FileType is the type of file.
-Can be &#34;file&#34;, &#34;video&#34;, &#34;image&#34;, &#34;audio&#34; or &#34;screenshare&#34;.`)
-
-	flags.StringVar(&v.DownloadURL, prefix+"DownloadURL", "", `DownloadURL URL which can be used to get the file.`)
-
-	flags.StringVar(&v.ThumbnailURL, prefix+"ThumbnailURL", "", `ThumbnailURL is an optional thumbnail URL for this file.`)
-
-	addFlagsForPerson(flags, "Author.", &v.Author)
-
-}
-
-func printFile(v *pace.File) {
-	b, err := json.MarshalIndent(v, "", "\t")
-	if err != nil {
-		fmt.Println("failed to marshal response:", err)
-		return
-	}
-	fmt.Println(string(b))
-}
-
-func printArgslistFile() {
-
-	fmt.Print("-ID= ")
-
-	fmt.Print("-CTime= ")
-
-	fmt.Print("-Name= ")
-
-	fmt.Print("-Path= ")
-
-	fmt.Print("-ContentType= ")
-
-	fmt.Print("-FileType= ")
-
-	fmt.Print("-Size= ")
-
-	fmt.Print("-DownloadURL= ")
-
-	fmt.Print("-ThumbnailURL= ")
-
-	fmt.Print("-Author= ")
+	fmt.Print("-photoURL= ")
 
 }
 
 func addFlagsForComment(flags *flag.FlagSet, prefix string, v *pace.Comment) {
 
-	flags.StringVar(&v.ID, prefix+"ID", "", ``)
+	flags.StringVar(&v.ID, prefix+"id", "", `ID is the ID of the comment.`)
 
-	flags.StringVar(&v.CTime, prefix+"CTime", "", ``)
+	flags.StringVar(&v.CTime, prefix+"cTime", "", `CTime is the time this was created.`)
 
-	flags.StringVar(&v.MTime, prefix+"MTime", "", ``)
+	flags.StringVar(&v.MTime, prefix+"mTime", "", `MTime is the time this comment was last modified.`)
 
-	flags.StringVar(&v.Body, prefix+"Body", "", ``)
+	flags.StringVar(&v.Body, prefix+"body", "", `Body is the markdown body of the comment.`)
 
-	flags.StringVar(&v.BodyHTML, prefix+"BodyHTML", "", ``)
+	flags.StringVar(&v.BodyHTML, prefix+"bodyHTML", "", `BodyHTML is the HTML formatted body of the comment.`)
 
-	addFlagsForPerson(flags, "Author.", &v.Author)
-
-	// []File not supported yet
+	addFlagsForPerson(flags, "author.", &v.Author)
 
 }
 
@@ -533,25 +492,23 @@ func printComment(v *pace.Comment) {
 
 func printArgslistComment() {
 
-	fmt.Print("-ID= ")
+	fmt.Print("-id= ")
 
-	fmt.Print("-CTime= ")
+	fmt.Print("-cTime= ")
 
-	fmt.Print("-MTime= ")
+	fmt.Print("-mTime= ")
 
-	fmt.Print("-Body= ")
+	fmt.Print("-body= ")
 
-	fmt.Print("-BodyHTML= ")
+	fmt.Print("-bodyHTML= ")
 
-	fmt.Print("-Author= ")
-
-	fmt.Print("-Files= ")
+	fmt.Print("-author= ")
 
 }
 
 func addFlagsForAddCommentResponse(flags *flag.FlagSet, prefix string, v *pace.AddCommentResponse) {
 
-	addFlagsForComment(flags, "Comment.", &v.Comment)
+	addFlagsForComment(flags, "comment.", &v.Comment)
 
 	// skipping Error field (handled by Go client)
 
@@ -568,17 +525,36 @@ func printAddCommentResponse(v *pace.AddCommentResponse) {
 
 func printArgslistAddCommentResponse() {
 
-	fmt.Print("-Comment= ")
+	fmt.Print("-comment= ")
 
-	fmt.Print("-Error= ")
-
-}
-
-func addFlagsForRelatedCardsSummary(flags *flag.FlagSet, prefix string, v *pace.RelatedCardsSummary) {
+	fmt.Print("-error= ")
 
 }
 
-func printRelatedCardsSummary(v *pace.RelatedCardsSummary) {
+func addFlagsForFile(flags *flag.FlagSet, prefix string, v *pace.File) {
+
+	flags.StringVar(&v.ID, prefix+"id", "", `ID is the identifier for this file.`)
+
+	flags.StringVar(&v.CTime, prefix+"cTime", "", `CTime is the time the file was uploaded.`)
+
+	flags.StringVar(&v.Name, prefix+"name", "", `Name is the name of the file.`)
+
+	flags.StringVar(&v.Path, prefix+"path", "", `Path is the path of the file.`)
+
+	flags.StringVar(&v.ContentType, prefix+"contentType", "", `ContentType is the type of the file.`)
+
+	flags.StringVar(&v.FileType, prefix+"fileType", "", `FileType is the type of file.
+Can be &#34;file&#34;, &#34;video&#34;, &#34;image&#34;, &#34;audio&#34; or &#34;screenshare&#34;.`)
+
+	flags.StringVar(&v.DownloadURL, prefix+"downloadURL", "", `DownloadURL URL which can be used to get the file.`)
+
+	flags.StringVar(&v.ThumbnailURL, prefix+"thumbnailURL", "", `ThumbnailURL is an optional thumbnail URL for this file.`)
+
+	addFlagsForPerson(flags, "author.", &v.Author)
+
+}
+
+func printFile(v *pace.File) {
 	b, err := json.MarshalIndent(v, "", "\t")
 	if err != nil {
 		fmt.Println("failed to marshal response:", err)
@@ -587,45 +563,57 @@ func printRelatedCardsSummary(v *pace.RelatedCardsSummary) {
 	fmt.Println(string(b))
 }
 
-func printArgslistRelatedCardsSummary() {
+func printArgslistFile() {
 
-	fmt.Print("-Total= ")
+	fmt.Print("-id= ")
 
-	fmt.Print("-Done= ")
+	fmt.Print("-cTime= ")
 
-	fmt.Print("-Progress= ")
+	fmt.Print("-name= ")
+
+	fmt.Print("-path= ")
+
+	fmt.Print("-contentType= ")
+
+	fmt.Print("-fileType= ")
+
+	fmt.Print("-size= ")
+
+	fmt.Print("-downloadURL= ")
+
+	fmt.Print("-thumbnailURL= ")
+
+	fmt.Print("-author= ")
 
 }
 
 func addFlagsForCard(flags *flag.FlagSet, prefix string, v *pace.Card) {
 
-	flags.StringVar(&v.ID, prefix+"ID", "", `ID is the unique ID of the card within the org.`)
+	flags.StringVar(&v.ID, prefix+"id", "", `ID is the unique ID of the card within the org.`)
 
-	flags.StringVar(&v.CTime, prefix+"CTime", "", ``)
+	flags.StringVar(&v.CTime, prefix+"cTime", "", `CTime is the time this was created.`)
 
-	flags.StringVar(&v.MTime, prefix+"MTime", "", ``)
+	flags.StringVar(&v.MTime, prefix+"mTime", "", `MTime is the time this comment was last modified.`)
 
-	flags.StringVar(&v.TeamID, prefix+"TeamID", "", ``)
+	flags.StringVar(&v.TeamID, prefix+"teamID", "", `TeamID is the ID of the team that this card belongs to.`)
 
-	flags.StringVar(&v.Slug, prefix+"Slug", "", ``)
+	flags.StringVar(&v.Slug, prefix+"slug", "", `Slug is the URL slug for this card.`)
 
-	flags.StringVar(&v.Title, prefix+"Title", "", ``)
+	flags.StringVar(&v.Title, prefix+"title", "", `Title is the title of the card.`)
 
-	flags.StringVar(&v.Status, prefix+"Status", "", ``)
+	flags.StringVar(&v.Status, prefix+"status", "", `Status is the current status of the card.`)
 
-	addFlagsForPerson(flags, "Author.", &v.Author)
+	addFlagsForPerson(flags, "author.", &v.Author)
 
-	flags.StringVar(&v.Body, prefix+"Body", "", ``)
+	flags.StringVar(&v.Body, prefix+"body", "", `Body is the markdown body of this card.`)
 
-	flags.StringVar(&v.BodyHTML, prefix+"BodyHTML", "", ``)
+	flags.StringVar(&v.BodyHTML, prefix+"bodyHTML", "", `BodyHTML is the HTML rendering of the body of this card.`)
 
 	// []string not supported yet
 
 	// []Person not supported yet
 
 	// []File not supported yet
-
-	addFlagsForRelatedCardsSummary(flags, "RelatedCardsSummary.", &v.RelatedCardsSummary)
 
 }
 
@@ -640,51 +628,47 @@ func printCard(v *pace.Card) {
 
 func printArgslistCard() {
 
-	fmt.Print("-ID= ")
+	fmt.Print("-id= ")
 
-	fmt.Print("-CTime= ")
+	fmt.Print("-cTime= ")
 
-	fmt.Print("-MTime= ")
+	fmt.Print("-mTime= ")
 
-	fmt.Print("-Order= ")
+	fmt.Print("-teamID= ")
 
-	fmt.Print("-TeamID= ")
+	fmt.Print("-slug= ")
 
-	fmt.Print("-Slug= ")
+	fmt.Print("-title= ")
 
-	fmt.Print("-Title= ")
+	fmt.Print("-status= ")
 
-	fmt.Print("-Status= ")
+	fmt.Print("-author= ")
 
-	fmt.Print("-Author= ")
+	fmt.Print("-body= ")
 
-	fmt.Print("-Body= ")
+	fmt.Print("-bodyHTML= ")
 
-	fmt.Print("-BodyHTML= ")
+	fmt.Print("-tags= ")
 
-	fmt.Print("-Tags= ")
+	fmt.Print("-takenByCurrentUser= ")
 
-	fmt.Print("-TakenByCurrentUser= ")
+	fmt.Print("-takenByPeople= ")
 
-	fmt.Print("-TakenByPeople= ")
-
-	fmt.Print("-Files= ")
-
-	fmt.Print("-RelatedCardsSummary= ")
+	fmt.Print("-files= ")
 
 }
 
 func addFlagsForCreateCardRequest(flags *flag.FlagSet, prefix string, v *pace.CreateCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"OrgID", "", `OrgID is the org ID in which to create the card.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the org ID in which to create the card.`)
 
-	flags.StringVar(&v.TeamID, prefix+"TeamID", "", `TeamID is the team ID in which to create the card.`)
+	flags.StringVar(&v.TeamID, prefix+"teamID", "", `TeamID is the team ID in which to create the card.`)
 
-	flags.StringVar(&v.Title, prefix+"Title", "", `Title is the title of the card.`)
+	flags.StringVar(&v.Title, prefix+"title", "", `Title is the title of the card.`)
 
-	flags.StringVar(&v.ParentTargetKind, prefix+"ParentTargetKind", "", `ParentTargetKind is the kind of target to relate this card to (e.g. card or message)`)
+	flags.StringVar(&v.ParentTargetKind, prefix+"parentTargetKind", "", `ParentTargetKind is the kind of target to relate this card to (e.g. card or message)`)
 
-	flags.StringVar(&v.ParentTargetID, prefix+"ParentTargetID", "", `ParentTargetID is the ID of the item to relate this new card to.`)
+	flags.StringVar(&v.ParentTargetID, prefix+"parentTargetID", "", `ParentTargetID is the ID of the item to relate this new card to.`)
 
 }
 
@@ -699,21 +683,21 @@ func printCreateCardRequest(v *pace.CreateCardRequest) {
 
 func printArgslistCreateCardRequest() {
 
-	fmt.Print("-OrgID= ")
+	fmt.Print("-orgID= ")
 
-	fmt.Print("-TeamID= ")
+	fmt.Print("-teamID= ")
 
-	fmt.Print("-Title= ")
+	fmt.Print("-title= ")
 
-	fmt.Print("-ParentTargetKind= ")
+	fmt.Print("-parentTargetKind= ")
 
-	fmt.Print("-ParentTargetID= ")
+	fmt.Print("-parentTargetID= ")
 
 }
 
 func addFlagsForCreateCardResponse(flags *flag.FlagSet, prefix string, v *pace.CreateCardResponse) {
 
-	addFlagsForCard(flags, "Card.", &v.Card)
+	addFlagsForCard(flags, "card.", &v.Card)
 
 	// skipping Error field (handled by Go client)
 
@@ -730,17 +714,17 @@ func printCreateCardResponse(v *pace.CreateCardResponse) {
 
 func printArgslistCreateCardResponse() {
 
-	fmt.Print("-Card= ")
+	fmt.Print("-card= ")
 
-	fmt.Print("-Error= ")
+	fmt.Print("-error= ")
 
 }
 
 func addFlagsForGetCardRequest(flags *flag.FlagSet, prefix string, v *pace.GetCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"OrgID", "", ``)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
 
-	flags.StringVar(&v.CardID, prefix+"CardID", "", ``)
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to get.`)
 
 }
 
@@ -755,15 +739,15 @@ func printGetCardRequest(v *pace.GetCardRequest) {
 
 func printArgslistGetCardRequest() {
 
-	fmt.Print("-OrgID= ")
+	fmt.Print("-orgID= ")
 
-	fmt.Print("-CardID= ")
+	fmt.Print("-cardID= ")
 
 }
 
 func addFlagsForGetCardResponse(flags *flag.FlagSet, prefix string, v *pace.GetCardResponse) {
 
-	addFlagsForCard(flags, "Card.", &v.Card)
+	addFlagsForCard(flags, "card.", &v.Card)
 
 	// skipping Error field (handled by Go client)
 
@@ -780,8 +764,79 @@ func printGetCardResponse(v *pace.GetCardResponse) {
 
 func printArgslistGetCardResponse() {
 
-	fmt.Print("-Card= ")
+	fmt.Print("-card= ")
 
-	fmt.Print("-Error= ")
+	fmt.Print("-error= ")
 
+}
+
+func addFlagsForUpdateCardStatusRequest(flags *flag.FlagSet, prefix string, v *pace.UpdateCardStatusRequest) {
+
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
+
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID number of the card.`)
+
+	flags.StringVar(&v.Status, prefix+"status", "", `Status is the new status of the card.
+Valid strings are &#34;future&#34;, &#34;next&#34;, &#34;progress&#34;, &#34;done&#34;.`)
+
+}
+
+func printUpdateCardStatusRequest(v *pace.UpdateCardStatusRequest) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistUpdateCardStatusRequest() {
+
+	fmt.Print("-orgID= ")
+
+	fmt.Print("-cardID= ")
+
+	fmt.Print("-status= ")
+
+}
+
+func addFlagsForUpdateCardStatusResponse(flags *flag.FlagSet, prefix string, v *pace.UpdateCardStatusResponse) {
+
+	addFlagsForCard(flags, "card.", &v.Card)
+
+	// skipping Error field (handled by Go client)
+
+}
+
+func printUpdateCardStatusResponse(v *pace.UpdateCardStatusResponse) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println("failed to marshal response:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func printArgslistUpdateCardStatusResponse() {
+
+	fmt.Print("-card= ")
+
+	fmt.Print("-error= ")
+
+}
+
+type globalFlags struct {
+	apikey string
+	secret string
+	host   string
+	debug  bool
+	silent bool
+}
+
+func (c *globalFlags) addFlags(flags *flag.FlagSet) {
+	flags.StringVar(&c.apikey, "apikey", "", "Pace API Key (env var: PACE_API_KEY)")
+	flags.StringVar(&c.secret, "secret", "", "Pace API secret (env var: PACE_API_SECRET)")
+	flags.StringVar(&c.host, "host", "https://pace.dev", "Pace remote host")
+	flags.BoolVar(&c.debug, "debug", false, "prints debug information")
+	flags.BoolVar(&c.silent, "silent", false, "prints no output for successful requests")
 }

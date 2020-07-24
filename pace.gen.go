@@ -173,6 +173,64 @@ func (s *CardsService) GetCard(ctx context.Context, r GetCardRequest) (*GetCardR
 	return &response.GetCardResponse, nil
 }
 
+// UpdateCardStatus updates a card&#39;s status.
+func (s *CardsService) UpdateCardStatus(ctx context.Context, r UpdateCardStatusRequest) (*UpdateCardStatusResponse, error) {
+	requestBodyBytes, err := json.Marshal(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCardStatus: marshal UpdateCardStatusRequest")
+	}
+	signature, err := genMAC(requestBodyBytes, s.client.secret)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCardStatus: generate signature UpdateCardStatusRequest")
+	}
+
+	url := s.client.RemoteHost + "/api/CardsService.UpdateCardStatus"
+	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCardStatus: NewRequest")
+	}
+	req.Header.Set("X-API-KEY", s.client.apiKey)
+	req.Header.Set("X-API-SIGNATURE", signature)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip")
+	req = req.WithContext(ctx)
+	resp, err := s.client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCardStatus")
+	}
+	defer resp.Body.Close()
+	var response struct {
+		UpdateCardStatusResponse
+		Error string
+	}
+	var bodyReader io.Reader = resp.Body
+	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
+		decodedBody, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "CardsService.UpdateCardStatus: new gzip reader")
+		}
+		defer decodedBody.Close()
+		bodyReader = decodedBody
+	}
+	respBodyBytes, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, errors.Wrap(err, "CardsService.UpdateCardStatus: read response body")
+	}
+	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+		if resp.StatusCode != http.StatusOK {
+			return nil, errors.Errorf("CardsService.UpdateCardStatus: (%d) %v", resp.StatusCode, string(respBodyBytes))
+		}
+		return nil, err
+	}
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.UpdateCardStatusResponse, nil
+}
+
+// CommentsService allows you to create comments in Pace.
 type CommentsService struct {
 	client *Client
 }
@@ -241,25 +299,66 @@ func (s *CommentsService) AddComment(ctx context.Context, r AddCommentRequest) (
 	return &response.AddCommentResponse, nil
 }
 
+// AddCommentRequest is the input object for AddComment.
 type AddCommentRequest struct {
+
+	// OrgID is the ID of the org.
 	OrgID string `json:"orgID"`
 
+	// TargetKind is the kind of item this comment is for. Can be &#34;card&#34;, &#34;message&#34;,
+	// &#34;showcase&#34;.
 	TargetKind string `json:"targetKind"`
 
+	// TargetID is the ID of the target.
 	TargetID string `json:"targetID"`
 
+	// Body is the markdown body of the comment.
 	Body string `json:"body"`
 }
 
 // Person is a human who uses Pace.
 type Person struct {
+
+	// ID is the ID of the Person.
 	ID string `json:"id"`
 
+	// Username is the Person&#39;s username within the org.
 	Username string `json:"username"`
 
+	// Name is the name of the Person.
 	Name string `json:"name"`
 
+	// PhotoURL is the URL of a picture of this Person.
 	PhotoURL string `json:"photoURL"`
+}
+
+// Comment is a single comment in Pace.
+type Comment struct {
+
+	// ID is the ID of the comment.
+	ID string `json:"id"`
+
+	// CTime is the time this was created.
+	CTime string `json:"cTime"`
+
+	// MTime is the time this comment was last modified.
+	MTime string `json:"mTime"`
+
+	// Body is the markdown body of the comment.
+	Body string `json:"body"`
+
+	// BodyHTML is the HTML formatted body of the comment.
+	BodyHTML string `json:"bodyHTML"`
+
+	// Author is the person who posted this comment.
+	Author Person `json:"author"`
+}
+
+// AddCommentResponse is the output object for AddComment.
+type AddCommentResponse struct {
+
+	// Comment is the comment that was created.
+	Comment Comment `json:"comment"`
 }
 
 // File represents an attached file.
@@ -297,59 +396,40 @@ type File struct {
 	Author Person `json:"author"`
 }
 
-type Comment struct {
-	ID string `json:"id"`
-
-	CTime string `json:"cTime"`
-
-	MTime string `json:"mTime"`
-
-	Body string `json:"body"`
-
-	BodyHTML string `json:"bodyHTML"`
-
-	Author Person `json:"author"`
-
-	Files []File `json:"files"`
-}
-
-type AddCommentResponse struct {
-	Comment Comment `json:"comment"`
-}
-
-type RelatedCardsSummary struct {
-	Total int `json:"total"`
-
-	Done int `json:"done"`
-
-	Progress int `json:"progress"`
-}
-
+// Card is a card in Pace.
 type Card struct {
 
 	// ID is the unique ID of the card within the org.
 	ID string `json:"id"`
 
+	// CTime is the time this was created.
 	CTime string `json:"cTime"`
 
+	// MTime is the time this comment was last modified.
 	MTime string `json:"mTime"`
 
-	Order float64 `json:"order"`
-
+	// TeamID is the ID of the team that this card belongs to.
 	TeamID string `json:"teamID"`
 
+	// Slug is the URL slug for this card.
 	Slug string `json:"slug"`
 
+	// Title is the title of the card.
 	Title string `json:"title"`
 
+	// Status is the current status of the card.
 	Status string `json:"status"`
 
+	// Author is the Person who created this card.
 	Author Person `json:"author"`
 
+	// Body is the markdown body of this card.
 	Body string `json:"body"`
 
+	// BodyHTML is the HTML rendering of the body of this card.
 	BodyHTML string `json:"bodyHTML"`
 
+	// Tags is a list of tags associated with this card.
 	Tags []string `json:"tags"`
 
 	// TakenByCurrentUser indicates whether the current user has taken this card or
@@ -361,10 +441,9 @@ type Card struct {
 
 	// Files are the list of files that are attached to this Card.
 	Files []File `json:"files"`
-
-	RelatedCardsSummary RelatedCardsSummary `json:"relatedCardsSummary"`
 }
 
+// CreateCardRequest is the input object for CreateCard.
 type CreateCardRequest struct {
 
 	// OrgID is the org ID in which to create the card.
@@ -384,19 +463,48 @@ type CreateCardRequest struct {
 	ParentTargetID string `json:"parentTargetID"`
 }
 
+// CreateCardResponse is the output object for CreateCard.
 type CreateCardResponse struct {
 
 	// Card is the card that was just created.
 	Card Card `json:"card"`
 }
 
+// GetCardRequest is the input object for GetCard.
 type GetCardRequest struct {
+
+	// OrgID is the ID of the org.
 	OrgID string `json:"orgID"`
 
+	// CardID is the ID of the card to get.
 	CardID string `json:"cardID"`
 }
 
+// GetCardResponse is the output object for GetCard.
 type GetCardResponse struct {
+
+	// Card is the card.
+	Card Card `json:"card"`
+}
+
+// UpdateCardStatusRequest is the input object UpdateCardStatus.
+type UpdateCardStatusRequest struct {
+
+	// OrgID is the ID of the org.
+	OrgID string `json:"orgID"`
+
+	// CardID is the ID number of the card.
+	CardID string `json:"cardID"`
+
+	// Status is the new status of the card. Valid strings are &#34;future&#34;, &#34;next&#34;,
+	// &#34;progress&#34;, &#34;done&#34;.
+	Status string `json:"status"`
+}
+
+// UpdateCardStatusResponse is the output object for UpdateCardService.
+type UpdateCardStatusResponse struct {
+
+	// Card is the card that was updated.
 	Card Card `json:"card"`
 }
 
