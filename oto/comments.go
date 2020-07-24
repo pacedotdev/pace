@@ -18,8 +18,10 @@ type AddCommentRequest struct {
 	// example: "card"
 	TargetKind string
 	// TargetID is the ID of the target.
+	// example: "123"
 	TargetID string
 	// Body is the markdown body of the comment.
+	// example: "This is my **comment**"
 	Body string
 }
 

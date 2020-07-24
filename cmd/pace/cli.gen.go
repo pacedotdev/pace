@@ -813,13 +813,13 @@ func printAddCommentRequest(v *pace.AddCommentRequest) {
 
 func printArgslistAddCommentRequest() {
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-targetKind= ")
+	fmt.Print(`-targetKind="card" `)
 
-	fmt.Print("-targetID= ")
+	fmt.Print(`-targetID="123" `)
 
-	fmt.Print("-body= ")
+	fmt.Print(`-body="This is my **comment**" `)
 
 }
 
@@ -846,13 +846,13 @@ func printPerson(v *pace.Person) {
 
 func printArgslistPerson() {
 
-	fmt.Print("-id= ")
+	fmt.Print(`-id="5f19afce3979fb39" `)
 
-	fmt.Print("-username= ")
+	fmt.Print(`-username="mat" `)
 
-	fmt.Print("-name= ")
+	fmt.Print(`-name="Mat Ryer" `)
 
-	fmt.Print("-photoURL= ")
+	fmt.Print(`-photoURL="https://pace.dev/public/people/matryer.png" `)
 
 }
 
@@ -883,17 +883,17 @@ func printComment(v *pace.Comment) {
 
 func printArgslistComment() {
 
-	fmt.Print("-id= ")
+	fmt.Print(`-id="5f19afce3979fb39" `)
 
-	fmt.Print("-cTime= ")
+	fmt.Print(`-cTime="2020-07-23T15:42:06.597897724Z" `)
 
-	fmt.Print("-mTime= ")
+	fmt.Print(`-mTime="2020-07-23T15:42:06.597897724Z" `)
 
-	fmt.Print("-body= ")
+	fmt.Print(`-body="Hello **Pace**" `)
 
-	fmt.Print("-bodyHTML= ")
+	fmt.Print(`-bodyHTML="&lt;p&gt;Hello &lt;strong&gt;Pace&lt;/strong&gt;&lt;/p&gt;" `)
 
-	fmt.Print("-author= ")
+	fmt.Print(`-author="" `)
 
 }
 
@@ -916,9 +916,9 @@ func printAddCommentResponse(v *pace.AddCommentResponse) {
 
 func printArgslistAddCommentResponse() {
 
-	fmt.Print("-comment= ")
+	fmt.Print(`-comment="" `)
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 
@@ -956,25 +956,25 @@ func printFile(v *pace.File) {
 
 func printArgslistFile() {
 
-	fmt.Print("-id= ")
+	fmt.Print(`-id="5f19afce3979fb39" `)
 
-	fmt.Print("-cTime= ")
+	fmt.Print(`-cTime="2020-07-23T15:42:06.597897724Z" `)
 
-	fmt.Print("-name= ")
+	fmt.Print(`-name="filename.jpg" `)
 
-	fmt.Print("-path= ")
+	fmt.Print(`-path="/path/to/filename.jpg" `)
 
-	fmt.Print("-contentType= ")
+	fmt.Print(`-contentType="image/jpg" `)
 
-	fmt.Print("-fileType= ")
+	fmt.Print(`-fileType="image" `)
 
-	fmt.Print("-size= ")
+	fmt.Print(`-size="65211" `)
 
-	fmt.Print("-downloadURL= ")
+	fmt.Print(`-downloadURL="/d/path/to/filename.jpg" `)
 
-	fmt.Print("-thumbnailURL= ")
+	fmt.Print(`-thumbnailURL="/d/path/to/filename-thumbnail.jpg" `)
 
-	fmt.Print("-author= ")
+	fmt.Print(`-author="" `)
 
 }
 
@@ -1019,33 +1019,33 @@ func printCard(v *pace.Card) {
 
 func printArgslistCard() {
 
-	fmt.Print("-id= ")
+	fmt.Print(`-id="123" `)
 
-	fmt.Print("-cTime= ")
+	fmt.Print(`-cTime="2020-07-23T15:42:06.597897724Z" `)
 
-	fmt.Print("-mTime= ")
+	fmt.Print(`-mTime="2020-07-23T15:42:06.597897724Z" `)
 
-	fmt.Print("-teamID= ")
+	fmt.Print(`-teamID="your-team-id" `)
 
-	fmt.Print("-slug= ")
+	fmt.Print(`-slug="this-is-my-card" `)
 
-	fmt.Print("-title= ")
+	fmt.Print(`-title="This is my card" `)
 
-	fmt.Print("-status= ")
+	fmt.Print(`-status="done" `)
 
-	fmt.Print("-author= ")
+	fmt.Print(`-author="" `)
 
-	fmt.Print("-body= ")
+	fmt.Print(`-body="Hello from **Pace**." `)
 
-	fmt.Print("-bodyHTML= ")
+	fmt.Print(`-bodyHTML="&lt;p&gt;Hello from &lt;strong&gt;Pace&lt;/strong&gt;." `)
 
-	fmt.Print("-tags= ")
+	fmt.Print(`-tags="bugquestion" `)
 
-	fmt.Print("-takenByCurrentUser= ")
+	fmt.Print(`-takenByCurrentUser="true" `)
 
-	fmt.Print("-takenByPeople= ")
+	fmt.Print(`-takenByPeople="" `)
 
-	fmt.Print("-files= ")
+	fmt.Print(`-files="" `)
 
 }
 
@@ -1074,15 +1074,15 @@ func printCreateCardRequest(v *pace.CreateCardRequest) {
 
 func printArgslistCreateCardRequest() {
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-teamID= ")
+	fmt.Print(`-teamID="your-team-id" `)
 
-	fmt.Print("-title= ")
+	fmt.Print(`-title="This is my new card" `)
 
-	fmt.Print("-parentTargetKind= ")
+	fmt.Print(`-parentTargetKind="card" `)
 
-	fmt.Print("-parentTargetID= ")
+	fmt.Print(`-parentTargetID="123" `)
 
 }
 
@@ -1105,9 +1105,9 @@ func printCreateCardResponse(v *pace.CreateCardResponse) {
 
 func printArgslistCreateCardResponse() {
 
-	fmt.Print("-card= ")
+	fmt.Print(`-card="" `)
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 
@@ -1130,9 +1130,9 @@ func printDeleteCardRequest(v *pace.DeleteCardRequest) {
 
 func printArgslistDeleteCardRequest() {
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-cardID= ")
+	fmt.Print(`-cardID="123" `)
 
 }
 
@@ -1153,7 +1153,7 @@ func printDeleteCardResponse(v *pace.DeleteCardResponse) {
 
 func printArgslistDeleteCardResponse() {
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 
@@ -1176,9 +1176,9 @@ func printGetCardRequest(v *pace.GetCardRequest) {
 
 func printArgslistGetCardRequest() {
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-cardID= ")
+	fmt.Print(`-cardID="123" `)
 
 }
 
@@ -1201,9 +1201,9 @@ func printGetCardResponse(v *pace.GetCardResponse) {
 
 func printArgslistGetCardResponse() {
 
-	fmt.Print("-card= ")
+	fmt.Print(`-card="" `)
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 
@@ -1226,9 +1226,9 @@ func printPutBackCardRequest(v *pace.PutBackCardRequest) {
 
 func printArgslistPutBackCardRequest() {
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-cardID= ")
+	fmt.Print(`-cardID="123" `)
 
 }
 
@@ -1251,9 +1251,9 @@ func printPutBackCardResponse(v *pace.PutBackCardResponse) {
 
 func printArgslistPutBackCardResponse() {
 
-	fmt.Print("-card= ")
+	fmt.Print(`-card="" `)
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 
@@ -1276,9 +1276,9 @@ func printTakeCardRequest(v *pace.TakeCardRequest) {
 
 func printArgslistTakeCardRequest() {
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-cardID= ")
+	fmt.Print(`-cardID="123" `)
 
 }
 
@@ -1301,9 +1301,9 @@ func printTakeCardResponse(v *pace.TakeCardResponse) {
 
 func printArgslistTakeCardResponse() {
 
-	fmt.Print("-card= ")
+	fmt.Print(`-card="" `)
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 
@@ -1330,13 +1330,13 @@ func printUpdateCardRequest(v *pace.UpdateCardRequest) {
 
 func printArgslistUpdateCardRequest() {
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-cardID= ")
+	fmt.Print(`-cardID="123" `)
 
-	fmt.Print("-title= ")
+	fmt.Print(`-title="New title" `)
 
-	fmt.Print("-body= ")
+	fmt.Print(`-body="I have been **updated**" `)
 
 }
 
@@ -1359,9 +1359,9 @@ func printUpdateCardResponse(v *pace.UpdateCardResponse) {
 
 func printArgslistUpdateCardResponse() {
 
-	fmt.Print("-card= ")
+	fmt.Print(`-card="" `)
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 
@@ -1387,11 +1387,11 @@ func printUpdateCardStatusRequest(v *pace.UpdateCardStatusRequest) {
 
 func printArgslistUpdateCardStatusRequest() {
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-cardID= ")
+	fmt.Print(`-cardID="123" `)
 
-	fmt.Print("-status= ")
+	fmt.Print(`-status="progress" `)
 
 }
 
@@ -1414,9 +1414,9 @@ func printUpdateCardStatusResponse(v *pace.UpdateCardStatusResponse) {
 
 func printArgslistUpdateCardStatusResponse() {
 
-	fmt.Print("-card= ")
+	fmt.Print(`-card="" `)
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 
@@ -1446,13 +1446,13 @@ func printDeleteCommentRequest(v *pace.DeleteCommentRequest) {
 
 func printArgslistDeleteCommentRequest() {
 
-	fmt.Print("-id= ")
+	fmt.Print(`-id="5f19afce3979fb39" `)
 
-	fmt.Print("-orgID= ")
+	fmt.Print(`-orgID="your-org-id" `)
 
-	fmt.Print("-targetKind= ")
+	fmt.Print(`-targetKind="card" `)
 
-	fmt.Print("-targetID= ")
+	fmt.Print(`-targetID="123" `)
 
 }
 
@@ -1473,7 +1473,7 @@ func printDeleteCommentResponse(v *pace.DeleteCommentResponse) {
 
 func printArgslistDeleteCommentResponse() {
 
-	fmt.Print("-error= ")
+	fmt.Print(`-error="" `)
 
 }
 

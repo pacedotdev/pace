@@ -216,7 +216,7 @@ func printTemplates() {
 
 	func printArgslist<%= object.Name %>() {
 		<%= for (field) in object.Fields { %>
-			fmt.Print("-<%= field.NameLowerCamel %>= ")
+			fmt.Print(`-<%= field.NameLowerCamel %>="<%= field.Example %>" `)
 		<% } %>
 	}
 <% } %>
