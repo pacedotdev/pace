@@ -100,11 +100,14 @@ type Card struct {
 // UpdateCardStatusRequest is the input object UpdateCardStatus.
 type UpdateCardStatusRequest struct {
 	// OrgID is the ID of the org.
+	// example: "your-org-id"
 	OrgID string
 	// CardID is the ID number of the card.
+	// example: "123"
 	CardID string
 	// Status is the new status of the card.
 	// Valid strings are "future", "next", "progress", "done".
+	// example: "progress"
 	Status string
 }
 
