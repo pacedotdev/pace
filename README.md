@@ -35,7 +35,7 @@ Check the version:
 $ pace version
 ```
 
-* **What next?** To learn more, see the [Pace CLI documentation](https://pace.dev/app/docs/cli)
+* **What next?** To learn more, see the [Pace CLI documentation](https://pace.dev/docs/cli)
 
 # Go client library
 
