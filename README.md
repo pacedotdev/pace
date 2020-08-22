@@ -63,13 +63,6 @@ import (
 	"github.com/pacedotdev/pace"
 )
 
-func main() {
-	ctx := context.Background()
-	if err := run(ctx); err != nil {
-		fmt.Fprintf(os.Stderr, "err: %s\n", err)
-	}
-}
-
 func run(ctx context.Context) error {
 	apikey := os.Getenv("PACE_API_KEY")
 	secret := os.Getenv("PACE_API_SECRET")
@@ -85,6 +78,13 @@ func run(ctx context.Context) error {
 	}
 
 	fmt.Println("Card 12:", resp.Card.Title)
+}
+
+func main() {
+	ctx := context.Background()
+	if err := run(ctx); err != nil {
+		fmt.Fprintf(os.Stderr, "err: %s\n", err)
+	}
 }
 ```
 
