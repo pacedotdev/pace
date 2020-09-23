@@ -71,14 +71,16 @@ func showHelp(args []string) {
 		printUsage()
 
 		fmt.Print("* CardsService")
-		commentForCardsService := `CardsService allows you to programmatically manage cards in Pace.`
+		commentForCardsService := `// CardsService allows you to programmatically manage cards in Pace.
+`
 		if commentForCardsService != "" {
 			fmt.Print(" - ", commentForCardsService)
 		}
 		fmt.Println()
 
 		fmt.Print("* CommentsService")
-		commentForCommentsService := `CommentsService allows you to programmatically manage comments in Pace.`
+		commentForCommentsService := `// CommentsService allows you to programmatically manage comments in Pace.
+`
 		if commentForCommentsService != "" {
 			fmt.Print(" - ", commentForCommentsService)
 		}
@@ -101,51 +103,56 @@ func showHelpFor(args []string, service string) {
 		fmt.Printf("methods for %s:\n", service)
 
 		fmt.Print("* CardsService.CreateCard")
-		commentForCardsServiceCreateCard := `CreateCard creates a new Card.`
+		commentForCardsServiceCreateCard := `// CreateCard creates a new Card.
+`
 		if commentForCardsServiceCreateCard != "" {
 			fmt.Print(" - ", commentForCardsServiceCreateCard)
 		}
 		fmt.Println()
 
 		fmt.Print("* CardsService.DeleteCard")
-		commentForCardsServiceDeleteCard := `DeleteCard deletes a card.`
+		commentForCardsServiceDeleteCard := `// DeleteCard deletes a card.
+`
 		if commentForCardsServiceDeleteCard != "" {
 			fmt.Print(" - ", commentForCardsServiceDeleteCard)
 		}
 		fmt.Println()
 
 		fmt.Print("* CardsService.GetCard")
-		commentForCardsServiceGetCard := `GetCard gets a card.`
+		commentForCardsServiceGetCard := `// GetCard gets a card.
+`
 		if commentForCardsServiceGetCard != "" {
 			fmt.Print(" - ", commentForCardsServiceGetCard)
 		}
 		fmt.Println()
 
 		fmt.Print("* CardsService.PutBackCard")
-		commentForCardsServicePutBackCard := `PutBackCard removes a user from the list of responsbile users.
-Undoes TakeCard.`
+		commentForCardsServicePutBackCard := `// PutBackCard removes a user from the list of responsbile users. Undoes TakeCard.
+`
 		if commentForCardsServicePutBackCard != "" {
 			fmt.Print(" - ", commentForCardsServicePutBackCard)
 		}
 		fmt.Println()
 
 		fmt.Print("* CardsService.TakeCard")
-		commentForCardsServiceTakeCard := `TakeCard takes responsibility for a card.
-Can be undone with PutBackCard.`
+		commentForCardsServiceTakeCard := `// TakeCard takes responsibility for a card. Can be undone with PutBackCard.
+`
 		if commentForCardsServiceTakeCard != "" {
 			fmt.Print(" - ", commentForCardsServiceTakeCard)
 		}
 		fmt.Println()
 
 		fmt.Print("* CardsService.UpdateCard")
-		commentForCardsServiceUpdateCard := `UpdateCard updates the title and body of the card.`
+		commentForCardsServiceUpdateCard := `// UpdateCard updates the title and body of the card.
+`
 		if commentForCardsServiceUpdateCard != "" {
 			fmt.Print(" - ", commentForCardsServiceUpdateCard)
 		}
 		fmt.Println()
 
 		fmt.Print("* CardsService.UpdateCardStatus")
-		commentForCardsServiceUpdateCardStatus := `UpdateCardStatus updates a card&#39;s status.`
+		commentForCardsServiceUpdateCardStatus := `// UpdateCardStatus updates a card's status.
+`
 		if commentForCardsServiceUpdateCardStatus != "" {
 			fmt.Print(" - ", commentForCardsServiceUpdateCardStatus)
 		}
@@ -253,14 +260,16 @@ flags:`)
 		fmt.Printf("methods for %s:\n", service)
 
 		fmt.Print("* CommentsService.AddComment")
-		commentForCommentsServiceAddComment := `AddComment adds a comment.`
+		commentForCommentsServiceAddComment := `// AddComment adds a comment.
+`
 		if commentForCommentsServiceAddComment != "" {
 			fmt.Print(" - ", commentForCommentsServiceAddComment)
 		}
 		fmt.Println()
 
 		fmt.Print("* CommentsService.DeleteComment")
-		commentForCommentsServiceDeleteComment := `DeleteComment deletes a Comment.`
+		commentForCommentsServiceDeleteComment := `// DeleteComment deletes a Comment.
+`
 		if commentForCommentsServiceDeleteComment != "" {
 			fmt.Print(" - ", commentForCommentsServiceDeleteComment)
 		}
@@ -683,65 +692,72 @@ func printFlagDefaults(args []string) {
 func printList() {
 
 	fmt.Printf("CardsService.CreateCard")
-	commentCardsServiceCreateCard := `CreateCard creates a new Card.`
+	commentCardsServiceCreateCard := `// CreateCard creates a new Card.
+`
 	if len(commentCardsServiceCreateCard) > 0 {
 		fmt.Printf(" - %s", commentCardsServiceCreateCard)
 	}
 	fmt.Println()
 
 	fmt.Printf("CardsService.DeleteCard")
-	commentCardsServiceDeleteCard := `DeleteCard deletes a card.`
+	commentCardsServiceDeleteCard := `// DeleteCard deletes a card.
+`
 	if len(commentCardsServiceDeleteCard) > 0 {
 		fmt.Printf(" - %s", commentCardsServiceDeleteCard)
 	}
 	fmt.Println()
 
 	fmt.Printf("CardsService.GetCard")
-	commentCardsServiceGetCard := `GetCard gets a card.`
+	commentCardsServiceGetCard := `// GetCard gets a card.
+`
 	if len(commentCardsServiceGetCard) > 0 {
 		fmt.Printf(" - %s", commentCardsServiceGetCard)
 	}
 	fmt.Println()
 
 	fmt.Printf("CardsService.PutBackCard")
-	commentCardsServicePutBackCard := `PutBackCard removes a user from the list of responsbile users.
-Undoes TakeCard.`
+	commentCardsServicePutBackCard := `// PutBackCard removes a user from the list of responsbile users. Undoes TakeCard.
+`
 	if len(commentCardsServicePutBackCard) > 0 {
 		fmt.Printf(" - %s", commentCardsServicePutBackCard)
 	}
 	fmt.Println()
 
 	fmt.Printf("CardsService.TakeCard")
-	commentCardsServiceTakeCard := `TakeCard takes responsibility for a card.
-Can be undone with PutBackCard.`
+	commentCardsServiceTakeCard := `// TakeCard takes responsibility for a card. Can be undone with PutBackCard.
+`
 	if len(commentCardsServiceTakeCard) > 0 {
 		fmt.Printf(" - %s", commentCardsServiceTakeCard)
 	}
 	fmt.Println()
 
 	fmt.Printf("CardsService.UpdateCard")
-	commentCardsServiceUpdateCard := `UpdateCard updates the title and body of the card.`
+	commentCardsServiceUpdateCard := `// UpdateCard updates the title and body of the card.
+`
 	if len(commentCardsServiceUpdateCard) > 0 {
 		fmt.Printf(" - %s", commentCardsServiceUpdateCard)
 	}
 	fmt.Println()
 
 	fmt.Printf("CardsService.UpdateCardStatus")
-	commentCardsServiceUpdateCardStatus := `UpdateCardStatus updates a card&#39;s status.`
+	commentCardsServiceUpdateCardStatus := `// UpdateCardStatus updates a card's status.
+`
 	if len(commentCardsServiceUpdateCardStatus) > 0 {
 		fmt.Printf(" - %s", commentCardsServiceUpdateCardStatus)
 	}
 	fmt.Println()
 
 	fmt.Printf("CommentsService.AddComment")
-	commentCommentsServiceAddComment := `AddComment adds a comment.`
+	commentCommentsServiceAddComment := `// AddComment adds a comment.
+`
 	if len(commentCommentsServiceAddComment) > 0 {
 		fmt.Printf(" - %s", commentCommentsServiceAddComment)
 	}
 	fmt.Println()
 
 	fmt.Printf("CommentsService.DeleteComment")
-	commentCommentsServiceDeleteComment := `DeleteComment deletes a Comment.`
+	commentCommentsServiceDeleteComment := `// DeleteComment deletes a Comment.
+`
 	if len(commentCommentsServiceDeleteComment) > 0 {
 		fmt.Printf(" - %s", commentCommentsServiceDeleteComment)
 	}
@@ -791,14 +807,18 @@ func printTemplates() {
 
 func addFlagsForAddCommentRequest(flags *flag.FlagSet, prefix string, v *pace.AddCommentRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the ID of the org.
+`)
 
-	flags.StringVar(&v.TargetKind, prefix+"targetKind", "", `TargetKind is the kind of item this comment is for.
-Can be &#34;card&#34;, &#34;message&#34;, or &#34;showcase&#34;.`)
+	flags.StringVar(&v.TargetKind, prefix+"targetKind", "", `// TargetKind is the kind of item this comment is for. Can be "card", "message", or
+// "showcase".
+`)
 
-	flags.StringVar(&v.TargetID, prefix+"targetID", "", `TargetID is the ID of the target.`)
+	flags.StringVar(&v.TargetID, prefix+"targetID", "", `// TargetID is the ID of the target.
+`)
 
-	flags.StringVar(&v.Body, prefix+"body", "", `Body is the markdown body of the comment.`)
+	flags.StringVar(&v.Body, prefix+"body", "", `// Body is the markdown body of the comment.
+`)
 
 }
 
@@ -825,13 +845,17 @@ func printArgslistAddCommentRequest() {
 
 func addFlagsForPerson(flags *flag.FlagSet, prefix string, v *pace.Person) {
 
-	flags.StringVar(&v.ID, prefix+"id", "", `ID is the ID of the Person.`)
+	flags.StringVar(&v.ID, prefix+"id", "", `// ID is the ID of the Person.
+`)
 
-	flags.StringVar(&v.Username, prefix+"username", "", `Username is the Person&#39;s username within the org.`)
+	flags.StringVar(&v.Username, prefix+"username", "", `// Username is the Person's username within the org.
+`)
 
-	flags.StringVar(&v.Name, prefix+"name", "", `Name is the name of the Person.`)
+	flags.StringVar(&v.Name, prefix+"name", "", `// Name is the name of the Person.
+`)
 
-	flags.StringVar(&v.PhotoURL, prefix+"photoURL", "", `PhotoURL is the URL of a picture of this Person.`)
+	flags.StringVar(&v.PhotoURL, prefix+"photoURL", "", `// PhotoURL is the URL of a picture of this Person.
+`)
 
 }
 
@@ -858,15 +882,20 @@ func printArgslistPerson() {
 
 func addFlagsForComment(flags *flag.FlagSet, prefix string, v *pace.Comment) {
 
-	flags.StringVar(&v.ID, prefix+"id", "", `ID is the ID of the comment.`)
+	flags.StringVar(&v.ID, prefix+"id", "", `// ID is the ID of the comment.
+`)
 
-	flags.StringVar(&v.CTime, prefix+"cTime", "", `CTime is the time this was created.`)
+	flags.StringVar(&v.CTime, prefix+"cTime", "", `// CTime is the time this was created.
+`)
 
-	flags.StringVar(&v.MTime, prefix+"mTime", "", `MTime is the time this comment was last modified.`)
+	flags.StringVar(&v.MTime, prefix+"mTime", "", `// MTime is the time this comment was last modified.
+`)
 
-	flags.StringVar(&v.Body, prefix+"body", "", `Body is the markdown body of the comment.`)
+	flags.StringVar(&v.Body, prefix+"body", "", `// Body is the markdown body of the comment.
+`)
 
-	flags.StringVar(&v.BodyHTML, prefix+"bodyHTML", "", `BodyHTML is the HTML formatted body of the comment.`)
+	flags.StringVar(&v.BodyHTML, prefix+"bodyHTML", "", `// BodyHTML is the HTML formatted body of the comment.
+`)
 
 	addFlagsForPerson(flags, "author.", &v.Author)
 
@@ -918,28 +947,36 @@ func printArgslistAddCommentResponse() {
 
 	fmt.Print(`-comment="" `)
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 
 func addFlagsForFile(flags *flag.FlagSet, prefix string, v *pace.File) {
 
-	flags.StringVar(&v.ID, prefix+"id", "", `ID is the identifier for this file.`)
+	flags.StringVar(&v.ID, prefix+"id", "", `// ID is the identifier for this file.
+`)
 
-	flags.StringVar(&v.CTime, prefix+"cTime", "", `CTime is the time the file was uploaded.`)
+	flags.StringVar(&v.CTime, prefix+"cTime", "", `// CTime is the time the file was uploaded.
+`)
 
-	flags.StringVar(&v.Name, prefix+"name", "", `Name is the name of the file.`)
+	flags.StringVar(&v.Name, prefix+"name", "", `// Name is the name of the file.
+`)
 
-	flags.StringVar(&v.Path, prefix+"path", "", `Path is the path of the file.`)
+	flags.StringVar(&v.Path, prefix+"path", "", `// Path is the path of the file.
+`)
 
-	flags.StringVar(&v.ContentType, prefix+"contentType", "", `ContentType is the type of the file.`)
+	flags.StringVar(&v.ContentType, prefix+"contentType", "", `// ContentType is the type of the file.
+`)
 
-	flags.StringVar(&v.FileType, prefix+"fileType", "", `FileType is the type of file.
-Can be &#34;file&#34;, &#34;video&#34;, &#34;image&#34;, &#34;audio&#34; or &#34;screenshare&#34;.`)
+	flags.StringVar(&v.FileType, prefix+"fileType", "", `// FileType is the type of file. Can be "file", "video", "image", "audio" or
+// "screenshare".
+`)
 
-	flags.StringVar(&v.DownloadURL, prefix+"downloadURL", "", `DownloadURL URL which can be used to get the file.`)
+	flags.StringVar(&v.DownloadURL, prefix+"downloadURL", "", `// DownloadURL URL which can be used to get the file.
+`)
 
-	flags.StringVar(&v.ThumbnailURL, prefix+"thumbnailURL", "", `ThumbnailURL is an optional thumbnail URL for this file.`)
+	flags.StringVar(&v.ThumbnailURL, prefix+"thumbnailURL", "", `// ThumbnailURL is an optional thumbnail URL for this file.
+`)
 
 	addFlagsForPerson(flags, "author.", &v.Author)
 
@@ -980,25 +1017,34 @@ func printArgslistFile() {
 
 func addFlagsForCard(flags *flag.FlagSet, prefix string, v *pace.Card) {
 
-	flags.StringVar(&v.ID, prefix+"id", "", `ID is the unique ID of the card within the org.`)
+	flags.StringVar(&v.ID, prefix+"id", "", `// ID is the unique ID of the card within the org.
+`)
 
-	flags.StringVar(&v.CTime, prefix+"cTime", "", `CTime is the time this was created.`)
+	flags.StringVar(&v.CTime, prefix+"cTime", "", `// CTime is the time this was created.
+`)
 
-	flags.StringVar(&v.MTime, prefix+"mTime", "", `MTime is the time this comment was last modified.`)
+	flags.StringVar(&v.MTime, prefix+"mTime", "", `// MTime is the time this comment was last modified.
+`)
 
-	flags.StringVar(&v.TeamID, prefix+"teamID", "", `TeamID is the ID of the team that this card belongs to.`)
+	flags.StringVar(&v.TeamID, prefix+"teamID", "", `// TeamID is the ID of the team that this card belongs to.
+`)
 
-	flags.StringVar(&v.Slug, prefix+"slug", "", `Slug is the URL slug for this card.`)
+	flags.StringVar(&v.Slug, prefix+"slug", "", `// Slug is the URL slug for this card.
+`)
 
-	flags.StringVar(&v.Title, prefix+"title", "", `Title is the title of the card.`)
+	flags.StringVar(&v.Title, prefix+"title", "", `// Title is the title of the card.
+`)
 
-	flags.StringVar(&v.Status, prefix+"status", "", `Status is the current status of the card.`)
+	flags.StringVar(&v.Status, prefix+"status", "", `// Status is the current status of the card.
+`)
 
 	addFlagsForPerson(flags, "author.", &v.Author)
 
-	flags.StringVar(&v.Body, prefix+"body", "", `Body is the markdown body of this card.`)
+	flags.StringVar(&v.Body, prefix+"body", "", `// Body is the markdown body of this card.
+`)
 
-	flags.StringVar(&v.BodyHTML, prefix+"bodyHTML", "", `BodyHTML is the HTML rendering of the body of this card.`)
+	flags.StringVar(&v.BodyHTML, prefix+"bodyHTML", "", `// BodyHTML is the HTML rendering of the body of this card.
+`)
 
 	// []string not supported yet
 
@@ -1051,15 +1097,21 @@ func printArgslistCard() {
 
 func addFlagsForCreateCardRequest(flags *flag.FlagSet, prefix string, v *pace.CreateCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the org ID in which to create the card.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the org ID in which to create the card.
+`)
 
-	flags.StringVar(&v.TeamID, prefix+"teamID", "", `TeamID is the team ID in which to create the card.`)
+	flags.StringVar(&v.TeamID, prefix+"teamID", "", `// TeamID is the team ID in which to create the card.
+`)
 
-	flags.StringVar(&v.Title, prefix+"title", "", `Title is the title of the card.`)
+	flags.StringVar(&v.Title, prefix+"title", "", `// Title is the title of the card.
+`)
 
-	flags.StringVar(&v.ParentTargetKind, prefix+"parentTargetKind", "", `ParentTargetKind is the kind of target to relate this card to (e.g. &#34;card&#34;, &#34;message&#34;, or &#34;showcase&#34;)`)
+	flags.StringVar(&v.ParentTargetKind, prefix+"parentTargetKind", "", `// ParentTargetKind is the kind of target to relate this card to (e.g. "card",
+// "message", or "showcase")
+`)
 
-	flags.StringVar(&v.ParentTargetID, prefix+"parentTargetID", "", `ParentTargetID is the ID of the item to relate this new card to.`)
+	flags.StringVar(&v.ParentTargetID, prefix+"parentTargetID", "", `// ParentTargetID is the ID of the item to relate this new card to.
+`)
 
 }
 
@@ -1107,15 +1159,17 @@ func printArgslistCreateCardResponse() {
 
 	fmt.Print(`-card="" `)
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 
 func addFlagsForDeleteCardRequest(flags *flag.FlagSet, prefix string, v *pace.DeleteCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of your org.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the ID of your org.
+`)
 
-	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to delete.`)
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `// CardID is the ID of the card to delete.
+`)
 
 }
 
@@ -1153,15 +1207,17 @@ func printDeleteCardResponse(v *pace.DeleteCardResponse) {
 
 func printArgslistDeleteCardResponse() {
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 
 func addFlagsForGetCardRequest(flags *flag.FlagSet, prefix string, v *pace.GetCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the ID of the org.
+`)
 
-	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to get.`)
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `// CardID is the ID of the card to get.
+`)
 
 }
 
@@ -1203,15 +1259,17 @@ func printArgslistGetCardResponse() {
 
 	fmt.Print(`-card="" `)
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 
 func addFlagsForPutBackCardRequest(flags *flag.FlagSet, prefix string, v *pace.PutBackCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of your org.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the ID of your org.
+`)
 
-	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to unassign yourself from.`)
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `// CardID is the ID of the card to unassign yourself from.
+`)
 
 }
 
@@ -1253,15 +1311,17 @@ func printArgslistPutBackCardResponse() {
 
 	fmt.Print(`-card="" `)
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 
 func addFlagsForTakeCardRequest(flags *flag.FlagSet, prefix string, v *pace.TakeCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of your org.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the ID of your org.
+`)
 
-	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to assign yourself to.`)
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `// CardID is the ID of the card to assign yourself to.
+`)
 
 }
 
@@ -1303,19 +1363,23 @@ func printArgslistTakeCardResponse() {
 
 	fmt.Print(`-card="" `)
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 
 func addFlagsForUpdateCardRequest(flags *flag.FlagSet, prefix string, v *pace.UpdateCardRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the ID of the org.
+`)
 
-	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID of the card to update.`)
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `// CardID is the ID of the card to update.
+`)
 
-	flags.StringVar(&v.Title, prefix+"title", "", `Title is the new title for the card.`)
+	flags.StringVar(&v.Title, prefix+"title", "", `// Title is the new title for the card.
+`)
 
-	flags.StringVar(&v.Body, prefix+"body", "", `Body is the new markdown body for the card.`)
+	flags.StringVar(&v.Body, prefix+"body", "", `// Body is the new markdown body for the card.
+`)
 
 }
 
@@ -1361,18 +1425,21 @@ func printArgslistUpdateCardResponse() {
 
 	fmt.Print(`-card="" `)
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 
 func addFlagsForUpdateCardStatusRequest(flags *flag.FlagSet, prefix string, v *pace.UpdateCardStatusRequest) {
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of the org.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the ID of the org.
+`)
 
-	flags.StringVar(&v.CardID, prefix+"cardID", "", `CardID is the ID number of the card.`)
+	flags.StringVar(&v.CardID, prefix+"cardID", "", `// CardID is the ID number of the card.
+`)
 
-	flags.StringVar(&v.Status, prefix+"status", "", `Status is the new status of the card.
-Valid strings are &#34;future&#34;, &#34;next&#34;, &#34;progress&#34;, &#34;done&#34;.`)
+	flags.StringVar(&v.Status, prefix+"status", "", `// Status is the new status of the card. Valid strings are "future", "next",
+// "progress", "done".
+`)
 
 }
 
@@ -1416,22 +1483,24 @@ func printArgslistUpdateCardStatusResponse() {
 
 	fmt.Print(`-card="" `)
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 
 func addFlagsForDeleteCommentRequest(flags *flag.FlagSet, prefix string, v *pace.DeleteCommentRequest) {
 
-	flags.StringVar(&v.ID, prefix+"id", "", `ID is the ID of the comment to delete.`)
+	flags.StringVar(&v.ID, prefix+"id", "", `// ID is the ID of the comment to delete.
+`)
 
-	flags.StringVar(&v.OrgID, prefix+"orgID", "", `OrgID is the ID of your org.`)
+	flags.StringVar(&v.OrgID, prefix+"orgID", "", `// OrgID is the ID of your org.
+`)
 
-	flags.StringVar(&v.TargetKind, prefix+"targetKind", "", `TargetKind is the kind of target this Comment was made on.
-Can be &#34;card&#34;, &#34;message&#34;, or &#34;showcase&#34;.
-Used to help identify the Comment.`)
+	flags.StringVar(&v.TargetKind, prefix+"targetKind", "", `// TargetKind is the kind of target this Comment was made on. Can be "card",
+// "message", or "showcase". Used to help identify the Comment.
+`)
 
-	flags.StringVar(&v.TargetID, prefix+"targetID", "", `TargetID is the ID of the target.
-Used to help identify the Comment.`)
+	flags.StringVar(&v.TargetID, prefix+"targetID", "", `// TargetID is the ID of the target. Used to help identify the Comment.
+`)
 
 }
 
@@ -1473,7 +1542,7 @@ func printDeleteCommentResponse(v *pace.DeleteCommentResponse) {
 
 func printArgslistDeleteCommentResponse() {
 
-	fmt.Print(`-error="" `)
+	fmt.Print(`-error="something went wrong" `)
 
 }
 

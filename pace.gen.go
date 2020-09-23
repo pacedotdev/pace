@@ -31,7 +31,7 @@ type Client struct {
 	Debug func(s string)
 	// apiKey is the API key to use when interacting with the server.
 	apiKey string
-	// secret is the Secret to make the HMAC signature
+	// secret is the cryptographic key for the HMAC signature.
 	secret []byte
 }
 
@@ -401,7 +401,7 @@ func (s *CardsService) UpdateCard(ctx context.Context, r UpdateCardRequest) (*Up
 	return &response.UpdateCardResponse, nil
 }
 
-// UpdateCardStatus updates a card&#39;s status.
+// UpdateCardStatus updates a card's status.
 func (s *CardsService) UpdateCardStatus(ctx context.Context, r UpdateCardStatusRequest) (*UpdateCardStatusResponse, error) {
 	requestBodyBytes, err := json.Marshal(r)
 	if err != nil {
@@ -590,8 +590,8 @@ type AddCommentRequest struct {
 	// OrgID is the ID of the org.
 	OrgID string `json:"orgID"`
 
-	// TargetKind is the kind of item this comment is for. Can be &#34;card&#34;, &#34;message&#34;, or
-	// &#34;showcase&#34;.
+	// TargetKind is the kind of item this comment is for. Can be "card", "message", or
+	// "showcase".
 	TargetKind string `json:"targetKind"`
 
 	// TargetID is the ID of the target.
@@ -607,7 +607,7 @@ type Person struct {
 	// ID is the ID of the Person.
 	ID string `json:"id"`
 
-	// Username is the Person&#39;s username within the org.
+	// Username is the Person's username within the org.
 	Username string `json:"username"`
 
 	// Name is the name of the Person.
@@ -664,8 +664,8 @@ type File struct {
 	// ContentType is the type of the file.
 	ContentType string `json:"contentType"`
 
-	// FileType is the type of file. Can be &#34;file&#34;, &#34;video&#34;, &#34;image&#34;, &#34;audio&#34; or
-	// &#34;screenshare&#34;.
+	// FileType is the type of file. Can be "file", "video", "image", "audio" or
+	// "screenshare".
 	FileType string `json:"fileType"`
 
 	// Size is the size of the file in bytes.
@@ -740,8 +740,8 @@ type CreateCardRequest struct {
 	// Title is the title of the card.
 	Title string `json:"title"`
 
-	// ParentTargetKind is the kind of target to relate this card to (e.g. &#34;card&#34;,
-	// &#34;message&#34;, or &#34;showcase&#34;)
+	// ParentTargetKind is the kind of target to relate this card to (e.g. "card",
+	// "message", or "showcase")
 	ParentTargetKind string `json:"parentTargetKind"`
 
 	// ParentTargetID is the ID of the item to relate this new card to.
@@ -852,8 +852,8 @@ type UpdateCardStatusRequest struct {
 	// CardID is the ID number of the card.
 	CardID string `json:"cardID"`
 
-	// Status is the new status of the card. Valid strings are &#34;future&#34;, &#34;next&#34;,
-	// &#34;progress&#34;, &#34;done&#34;.
+	// Status is the new status of the card. Valid strings are "future", "next",
+	// "progress", "done".
 	Status string `json:"status"`
 }
 
@@ -873,8 +873,8 @@ type DeleteCommentRequest struct {
 	// OrgID is the ID of your org.
 	OrgID string `json:"orgID"`
 
-	// TargetKind is the kind of target this Comment was made on. Can be &#34;card&#34;,
-	// &#34;message&#34;, or &#34;showcase&#34;. Used to help identify the Comment.
+	// TargetKind is the kind of target this Comment was made on. Can be "card",
+	// "message", or "showcase". Used to help identify the Comment.
 	TargetKind string `json:"targetKind"`
 
 	// TargetID is the ID of the target. Used to help identify the Comment.

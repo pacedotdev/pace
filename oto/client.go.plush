@@ -33,7 +33,7 @@ type Client struct {
 	Debug func(s string)
 	// apiKey is the API key to use when interacting with the server.
 	apiKey 		string
-	// secret is the Secret to make the HMAC signature
+	// secret is the cryptographic key for the HMAC signature.
 	secret []byte
 }
 

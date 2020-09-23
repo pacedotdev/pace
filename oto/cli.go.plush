@@ -52,7 +52,7 @@ func showHelp(args []string) {
 		printUsage()
 		<%= for (service) in def.Services { %>
 			fmt.Print("* <%= service.Name %>")
-			commentFor<%= service.Name %> := `<%= service.Comment %>`
+			commentFor<%= service.Name %> := `<%= format_comment_text(service.Comment) %>`
 			if commentFor<%= service.Name %> != "" {
 				fmt.Print(" - ", commentFor<%= service.Name %>)
 			}
@@ -75,7 +75,7 @@ func showHelpFor(args []string, service string) {
 		fmt.Printf("methods for %s:\n", service)
 		<%= for (method) in service.Methods { %>
 			fmt.Print("* <%= service.Name %>.<%= method.Name %>")
-			commentFor<%= service.Name %><%= method.Name %> := `<%= method.Comment %>`
+			commentFor<%= service.Name %><%= method.Name %> := `<%= format_comment_text(method.Comment) %>`
 			if commentFor<%= service.Name %><%= method.Name %> != "" {
 				fmt.Print(" - ", commentFor<%= service.Name %><%= method.Name %>)
 			}
@@ -171,7 +171,7 @@ func printList() {
 	<%= for (service) in def.Services { %>
 		<%= for (method) in service.Methods { %>
 			fmt.Printf("<%= service.Name %>.<%= method.Name %>")
-			comment<%= service.Name %><%= method.Name %> := `<%= method.Comment %>`
+			comment<%= service.Name %><%= method.Name %> := `<%= format_comment_text(method.Comment) %>`
 			if len(comment<%= service.Name %><%= method.Name %>) > 0 {
 				fmt.Printf(" - %s", comment<%= service.Name %><%= method.Name %>)
 			}
@@ -200,7 +200,7 @@ func printTemplates() {
 			<% } else if (field.Type.IsObject) { %>
 			addFlagsFor<%= field.Type.TypeName %>(flags, "<%= field.NameLowerCamel %>.", &v.<%= field.Name %>)
 			<% } else if (field.Type.TypeName == "string") { %>
-				flags.StringVar(&v.<%= field.Name %>, prefix+"<%= field.NameLowerCamel %>", "", `<%= field.Comment %>`)
+				flags.StringVar(&v.<%= field.Name %>, prefix+"<%= field.NameLowerCamel %>", "", `<%= format_comment_text(field.Comment) %>`)
 			<% } %>
 		<% } %>
 	}
